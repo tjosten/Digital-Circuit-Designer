@@ -13,11 +13,13 @@ namespace OOD2
         public TestControl()
         {
             this.init();
+            // allow drag & drop
+            this.AllowDrop = true;
         }
 
         void init()
         {
-            image = Image.FromFile("C:\\Users\\tj\\Documents\\GitHub\\OOD2-Assignment\\OOD2\\img\\and.jpg");
+            image = Image.FromFile("C:\\Users\\Timo Josten\\Documents\\GitHub\\OOD2-Assignment\\OOD2\\img\\and.jpg");
             this.Image = image;
             this.Height = image.Height;
             this.Width = image.Width;
