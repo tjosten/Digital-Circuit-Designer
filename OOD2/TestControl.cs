@@ -24,5 +24,11 @@ namespace OOD2
             this.Height = image.Height;
             this.Width = image.Width;
         }
+
+        public void draw(Point point, PictureBox pictureBox)
+        {
+            this.Location = point;
+            pictureBox.Controls.Add(this);
+        }
     }
 }

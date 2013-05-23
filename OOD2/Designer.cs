@@ -58,9 +58,7 @@ namespace OOD2
 
             // add the thing to the canvas
             TestControl control = new TestControl();
-            control.Location = dropPoint;
-            control.MouseDown += new System.Windows.Forms.MouseEventHandler(testControl1_DoDragDrop);
-            this.pictureBox1.Controls.Add(control);
+            control.draw(dropPoint, this.pictureBox1);
         }
 
         private void Canvas_OnDragLeave(object sender, System.Windows.Forms.DragEventArgs e)

@@ -47,6 +47,7 @@
             // 
             // testControl1
             // 
+            this.testControl1.AllowDrop = true;
             this.testControl1.Image = ((System.Drawing.Image)(resources.GetObject("testControl1.Image")));
             this.testControl1.Location = new System.Drawing.Point(38, 12);
             this.testControl1.Name = "testControl1";
