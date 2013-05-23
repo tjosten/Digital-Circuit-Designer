@@ -12,6 +12,9 @@ namespace OOD2
 {
     public partial class Designer : Form
     {
+
+        List<Control> controls = new List<Control>();
+
         public Designer()
         {
             InitializeComponent();
@@ -59,6 +62,9 @@ namespace OOD2
             // add the thing to the canvas
             TestControl control = new TestControl();
             control.draw(dropPoint, this.pictureBox1);
+
+            // add the control to the list
+            this.controls.Add(control);
         }
 
         private void Canvas_OnDragLeave(object sender, System.Windows.Forms.DragEventArgs e)

@@ -30,5 +30,10 @@ namespace OOD2
             this.Location = point;
             pictureBox.Controls.Add(this);
         }
+
+        public Point tellPosition()
+        {
+            return this.Location;
+        }
     }
 }
