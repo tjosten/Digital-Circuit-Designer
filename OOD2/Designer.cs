@@ -56,7 +56,15 @@ namespace OOD2
 
             // determine drop position
             PictureBox canvas = (PictureBox)sender;
-            Point dropPoint = this.pictureBox1.PointToClient(new Point(e.X, e.Y));
+
+            int x = e.X;
+            int y = e.Y;
+
+            // update x, y so it aligns to the grid
+            x = ((int)(x / 10)) * 10;
+            y = ((int)(y / 10)) * 10;
+
+            Point dropPoint = this.pictureBox1.PointToClient(new Point(x, y));
 
             System.Console.WriteLine("Drop Position: " + dropPoint.X + ":" + dropPoint.Y);
 
