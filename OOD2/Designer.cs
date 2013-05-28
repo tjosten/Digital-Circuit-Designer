@@ -16,6 +16,8 @@ namespace OOD2
         List<Control> controls = new List<Control>();
         List<Control> activeControls = new List<Control>();
         String dragSourceType;
+        BaseControl controlStart;
+        BaseControl controlEnd;
 
         public Designer()
         {
@@ -106,6 +108,8 @@ namespace OOD2
 
             control.draw(dropPoint, this.pictureBox1);
             control.Click += new EventHandler(controlClickHandler);
+            control.MouseDown += new MouseEventHandler(connectControlsStart);
+            control.MouseEnter += new EventHandler(connectControlsOver);
 
             // add the control to the list
             this.controls.Add(control);
@@ -174,6 +178,14 @@ namespace OOD2
                 // remove the event and add it again - prevents system from adding it twice
                 control.Click -= new EventHandler(controlClickHandler);
                 control.Click += new EventHandler(controlClickHandler);
+
+                // remove the event and add it again - prevents system from adding it twice
+                control.MouseDown -= new MouseEventHandler(connectControlsStart);
+                control.MouseDown += new MouseEventHandler(connectControlsStart);
+
+                // remove the event and add it again - prevents system from adding it twice
+                control.MouseEnter -= new EventHandler(connectControlsOver);
+                control.MouseEnter += new EventHandler(connectControlsOver);
             }
 
             // draw rectangles for active controls
@@ -225,6 +237,46 @@ namespace OOD2
         private void baseNotControl_MouseDown(object sender, MouseEventArgs e)
         {
             this.dragSourceType = sender.GetType().ToString();
+        }
+
+
+        public void connectControlsStart(object sender, MouseEventArgs e)
+        {
+            this.controlStart = (BaseControl)sender;
+        }
+
+        public void connectControlsOver(object sender, EventArgs e)
+        {
+            if (this.controlStart == null)
+                return;
+            
+            this.controlEnd = (BaseControl)sender;
+
+            if (this.controlStart == this.controlEnd)
+            {
+                Console.WriteLine("Cannot connect the same gates with each other, aborting.");
+                return;
+            }
+
+            Console.WriteLine(this.controlStart.ToString() + ":" + this.controlEnd.ToString());
+
+            // let's connect these..
+            Pen penBlack = new Pen(Color.Black, 3);
+            Graphics gr = this.pictureBox1.CreateGraphics();
+
+            Point start = this.controlStart.tellPosition();
+            Point end = this.controlEnd.tellPosition();
+
+            // add the half-width and half-height of the controls from the points
+            start.X += this.controlStart.Width / 2;
+            start.Y += this.controlStart.Height / 2;
+            end.X += this.controlEnd.Width / 2;
+            end.Y += this.controlEnd.Height / 2;
+            
+            gr.DrawLine(penBlack, start, end);
+
+            this.controlStart = null;
+            this.controlEnd = null;
         }
     }
 }

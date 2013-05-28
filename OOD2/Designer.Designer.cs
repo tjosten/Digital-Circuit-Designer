@@ -32,17 +32,17 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnRedraw = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
+            this.baseNotControl = new OOD2.NotControl();
+            this.baseXorControl = new OOD2.XorControl();
             this.baseOrControl = new OOD2.OrControl();
             this.baseAndControl = new OOD2.AndControl();
             this.testControl1 = new OOD2.BaseControl();
-            this.baseXorControl = new OOD2.XorControl();
-            this.baseNotControl = new OOD2.NotControl();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baseNotControl)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baseXorControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseOrControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseAndControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.testControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.baseXorControl)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.baseNotControl)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -77,6 +77,28 @@
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
+            // baseNotControl
+            // 
+            this.baseNotControl.AllowDrop = true;
+            this.baseNotControl.Image = ((System.Drawing.Image)(resources.GetObject("baseNotControl.Image")));
+            this.baseNotControl.Location = new System.Drawing.Point(38, 180);
+            this.baseNotControl.Name = "baseNotControl";
+            this.baseNotControl.Size = new System.Drawing.Size(75, 50);
+            this.baseNotControl.TabIndex = 7;
+            this.baseNotControl.TabStop = false;
+            this.baseNotControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseNotControl_MouseDown);
+            // 
+            // baseXorControl
+            // 
+            this.baseXorControl.AllowDrop = true;
+            this.baseXorControl.Image = ((System.Drawing.Image)(resources.GetObject("baseXorControl.Image")));
+            this.baseXorControl.Location = new System.Drawing.Point(38, 124);
+            this.baseXorControl.Name = "baseXorControl";
+            this.baseXorControl.Size = new System.Drawing.Size(75, 50);
+            this.baseXorControl.TabIndex = 6;
+            this.baseXorControl.TabStop = false;
+            this.baseXorControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseXorControl_MouseDown);
+            // 
             // baseOrControl
             // 
             this.baseOrControl.AllowDrop = true;
@@ -108,28 +130,6 @@
             this.testControl1.TabIndex = 1;
             this.testControl1.TabStop = false;
             // 
-            // baseXorControl
-            // 
-            this.baseXorControl.AllowDrop = true;
-            this.baseXorControl.Image = ((System.Drawing.Image)(resources.GetObject("baseXorControl.Image")));
-            this.baseXorControl.Location = new System.Drawing.Point(38, 124);
-            this.baseXorControl.Name = "baseXorControl";
-            this.baseXorControl.Size = new System.Drawing.Size(75, 50);
-            this.baseXorControl.TabIndex = 6;
-            this.baseXorControl.TabStop = false;
-            this.baseXorControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseXorControl_MouseDown);
-            // 
-            // baseNotControl
-            // 
-            this.baseNotControl.AllowDrop = true;
-            this.baseNotControl.Image = ((System.Drawing.Image)(resources.GetObject("baseNotControl.Image")));
-            this.baseNotControl.Location = new System.Drawing.Point(38, 180);
-            this.baseNotControl.Name = "baseNotControl";
-            this.baseNotControl.Size = new System.Drawing.Size(75, 50);
-            this.baseNotControl.TabIndex = 7;
-            this.baseNotControl.TabStop = false;
-            this.baseNotControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseNotControl_MouseDown);
-            // 
             // Designer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -148,11 +148,11 @@
             this.Name = "Designer";
             this.Text = "Designer";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baseNotControl)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baseXorControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseOrControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseAndControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.testControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.baseXorControl)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.baseNotControl)).EndInit();
             this.ResumeLayout(false);
 
         }
