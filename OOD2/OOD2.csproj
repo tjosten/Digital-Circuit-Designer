@@ -46,6 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AndControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NotControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="XorControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OrControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Designer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -60,11 +72,11 @@
     <Compile Include="Library\Switch.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestControl.cs">
+    <Compile Include="BaseControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TestControl.Designer.cs">
-      <DependentUpon>TestControl.cs</DependentUpon>
+    <Compile Include="BaseControl.Designer.cs">
+      <DependentUpon>BaseControl.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Designer.resx">
       <DependentUpon>Designer.cs</DependentUpon>

@@ -15,6 +15,7 @@ namespace OOD2
 
         List<Control> controls = new List<Control>();
         List<Control> activeControls = new List<Control>();
+        String dragSourceType;
 
         public Designer()
         {
@@ -29,25 +30,40 @@ namespace OOD2
             //this.pictureBox1.DragLeave += new DragEventHandler(this.Canvas_OnDragLeave);
 
             // allow the controls to be dragged
-            this.testControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.testControl1_DoDragDrop);
+            this.baseAndControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseAndControl_DoDragDrop);
+            this.baseOrControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseOrControl_DoDragDrop);
+            this.baseXorControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseXorControl_DoDragDrop);
+            this.baseNotControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseNotControl_DoDragDrop);
         }
 
-        private void testControl1_DoDragDrop(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void baseAndControl_DoDragDrop(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            this.testControl1.DoDragDrop(this.testControl1, DragDropEffects.Copy);
+            this.baseAndControl.DoDragDrop(this.baseAndControl, DragDropEffects.Copy);
+        }
+
+        private void baseOrControl_DoDragDrop(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            this.baseOrControl.DoDragDrop(this.baseOrControl, DragDropEffects.Copy);
+        }
+
+        private void baseXorControl_DoDragDrop(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            this.baseXorControl.DoDragDrop(this.baseXorControl, DragDropEffects.Copy);
+        }
+
+        private void baseNotControl_DoDragDrop(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            this.baseNotControl.DoDragDrop(this.baseNotControl, DragDropEffects.Copy);
         }
         
         private void Canvas_OnDragEnter(object sender, System.Windows.Forms.DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
-            //not so much spam..
-            //System.Console.WriteLine("Canvas_OnDragEnter");
+            
         }
 
         private void Canvas_OnDragOver(object sender, System.Windows.Forms.DragEventArgs e)
         {
-            //not so much spam..
-            //System.Console.WriteLine("Canvas_OnDragOver");
         }
 
         private void Canvas_OnDragDrop(object sender, System.Windows.Forms.DragEventArgs e)
@@ -68,8 +84,26 @@ namespace OOD2
 
             System.Console.WriteLine("Drop Position: " + dropPoint.X + ":" + dropPoint.Y);
 
+            System.Console.WriteLine("Drop type: " + this.dragSourceType);
+
             // add the thing to the canvas
-            TestControl control = new TestControl();
+            BaseControl control = new BaseControl();
+            switch(this.dragSourceType)
+            {
+                case "OOD2.AndControl":
+                    control = new AndControl();
+                    break;
+                case "OOD2.OrControl":
+                    control = new OrControl();
+                    break;
+                case "OOD2.XorControl":
+                    control = new XorControl();
+                    break;
+                case "OOD2.NotControl":
+                    control = new NotControl();
+                    break;
+            }
+
             control.draw(dropPoint, this.pictureBox1);
             control.Click += new EventHandler(controlClickHandler);
 
@@ -85,7 +119,7 @@ namespace OOD2
         // click handler for controls
         public void controlClickHandler(object sender, EventArgs e)
         {
-            TestControl control = (TestControl)sender;
+            BaseControl control = (BaseControl)sender;
 
             // check if this control is already acitve; if so - unactivate it
             if (this.activeControls.Contains(control))
@@ -134,7 +168,7 @@ namespace OOD2
             }
 
             // draw all controls
-            foreach(TestControl control in this.controls)
+            foreach(BaseControl control in this.controls)
             {
                 control.draw(control.tellPosition(), pb);
                 // remove the event and add it again - prevents system from adding it twice
@@ -143,7 +177,7 @@ namespace OOD2
             }
 
             // draw rectangles for active controls
-            foreach(TestControl control in this.activeControls)
+            foreach(BaseControl control in this.activeControls)
             {
                 // mark it as active by drawing a border around it
                 Rectangle rect = new Rectangle(control.Location.X, control.Location.Y, control.ClientSize.Width, control.ClientSize.Height);
@@ -162,7 +196,7 @@ namespace OOD2
             // delete the active control
             if (this.activeControls.Count != 0)
             {
-                foreach(TestControl control in this.activeControls)
+                foreach(BaseControl control in this.activeControls)
                 {
                     this.controls.Remove(control);
                     this.pictureBox1.Controls.Remove(control);
@@ -171,6 +205,26 @@ namespace OOD2
                 this.btnDelete.Enabled = false;
                 this.pictureBox1.Invalidate();
             }
+        }
+
+        private void baseAndControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            this.dragSourceType = sender.GetType().ToString();
+        }
+
+        private void baseOrControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            this.dragSourceType = sender.GetType().ToString();
+        }
+
+        private void baseXorControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            this.dragSourceType = sender.GetType().ToString();
+        }
+
+        private void baseNotControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            this.dragSourceType = sender.GetType().ToString();
         }
     }
 }

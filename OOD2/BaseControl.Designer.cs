@@ -1,6 +1,6 @@
 ﻿namespace OOD2
 {
-    partial class TestControl
+    partial class BaseControl
     {
         /// <summary> 
         /// Required designer variable.
