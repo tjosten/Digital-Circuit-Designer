@@ -32,12 +32,14 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnRedraw = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
+            this.baseSource = new OOD2.BaseSource();
             this.baseNotControl = new OOD2.NotControl();
             this.baseXorControl = new OOD2.XorControl();
             this.baseOrControl = new OOD2.OrControl();
             this.baseAndControl = new OOD2.AndControl();
             this.testControl1 = new OOD2.BaseControl();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baseSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseNotControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseXorControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseOrControl)).BeginInit();
@@ -76,6 +78,17 @@
             this.btnDelete.Text = "Delete control(s)";
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // baseSource
+            // 
+            this.baseSource.AllowDrop = true;
+            this.baseSource.Image = ((System.Drawing.Image)(resources.GetObject("baseSource.Image")));
+            this.baseSource.Location = new System.Drawing.Point(57, 236);
+            this.baseSource.Name = "baseSource";
+            this.baseSource.Size = new System.Drawing.Size(37, 48);
+            this.baseSource.TabIndex = 8;
+            this.baseSource.TabStop = false;
+            this.baseSource.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseSource_MouseDown);
             // 
             // baseNotControl
             // 
@@ -135,6 +148,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(664, 605);
+            this.Controls.Add(this.baseSource);
             this.Controls.Add(this.baseNotControl);
             this.Controls.Add(this.baseXorControl);
             this.Controls.Add(this.baseOrControl);
@@ -148,6 +162,7 @@
             this.Name = "Designer";
             this.Text = "Designer";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baseSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseNotControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseXorControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseOrControl)).EndInit();
@@ -167,6 +182,7 @@
         private OrControl baseOrControl;
         private XorControl baseXorControl;
         private NotControl baseNotControl;
+        private BaseSource baseSource;
 
 
 

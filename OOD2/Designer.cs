@@ -36,6 +36,13 @@ namespace OOD2
             this.baseOrControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseOrControl_DoDragDrop);
             this.baseXorControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseXorControl_DoDragDrop);
             this.baseNotControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseNotControl_DoDragDrop);
+
+            this.baseSource.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseSource_DoDragDrop);
+        }
+
+        private void baseSource_DoDragDrop(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            this.baseSource.DoDragDrop(this.baseSource, DragDropEffects.Copy);
         }
 
         private void baseAndControl_DoDragDrop(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -104,10 +111,13 @@ namespace OOD2
                 case "OOD2.NotControl":
                     control = new NotControl();
                     break;
+                case "OOD2.BaseSource":
+                    control = new BaseSource();
+                    break;
             }
 
             control.draw(dropPoint, this.pictureBox1);
-            control.Click += new EventHandler(controlClickHandler);
+            control.MouseClick += new MouseEventHandler(controlClickHandler);
             control.MouseDown += new MouseEventHandler(connectControlsStart);
             control.MouseUp += new MouseEventHandler(connectControlsEnd);
 
@@ -121,9 +131,22 @@ namespace OOD2
         }
 
         // click handler for controls
-        public void controlClickHandler(object sender, EventArgs e)
+        public void controlClickHandler(object sender, MouseEventArgs e)
         {
             BaseControl control = (BaseControl)sender;
+
+            // check if we want to toggle something
+            if (e.Button == MouseButtons.Right)
+            {
+                if (control.GetType().ToString() == "OOD2.BaseSource")
+                {
+                    // toggle here
+                    BaseSource sourceControl = (BaseSource)sender;
+                    sourceControl.toggle();
+                    this.pictureBox1.Invalidate();
+                }
+                return;
+            }
 
             // check if this control is already acitve; if so - unactivate it
             if (this.activeControls.Contains(control))
@@ -176,8 +199,8 @@ namespace OOD2
             {
                 control.draw(control.tellPosition(), pb);
                 // remove the event and add it again - prevents system from adding it twice
-                control.Click -= new EventHandler(controlClickHandler);
-                control.Click += new EventHandler(controlClickHandler);
+                control.MouseClick -= new MouseEventHandler(controlClickHandler);
+                control.MouseClick += new MouseEventHandler(controlClickHandler);
 
                 // remove the event and add it again - prevents system from adding it twice
                 control.MouseDown -= new MouseEventHandler(connectControlsStart);
@@ -252,6 +275,10 @@ namespace OOD2
             this.dragSourceType = sender.GetType().ToString();
         }
 
+        private void baseSource_MouseDown(object sender, MouseEventArgs e)
+        {
+            this.dragSourceType = sender.GetType().ToString();
+        }
 
         public void connectControlsStart(object sender, MouseEventArgs e)
         {

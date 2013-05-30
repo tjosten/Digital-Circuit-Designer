@@ -19,7 +19,7 @@ namespace OOD2
             this.AllowDrop = true;
         }
 
-        protected void init(System.Drawing.Image image)
+        protected virtual void init(System.Drawing.Image image)
         {
             //image = Image.FromFile("C:\\Users\\Timo Josten\\Documents\\GitHub\\OOD2-Assignment\\OOD2\\img\\and.jpg");
             this.image = image;

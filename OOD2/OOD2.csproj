@@ -49,6 +49,12 @@
     <Compile Include="AndControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="BaseSource.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BaseSource.Designer.cs">
+      <DependentUpon>BaseSource.cs</DependentUpon>
+    </Compile>
     <Compile Include="NotControl.cs">
       <SubType>Component</SubType>
     </Compile>
