@@ -337,6 +337,13 @@ namespace OOD2
                 }
             }
 
+            // check if the end is a source, if so: abort
+            if (this.controlEnd.GetType().ToString() == "OOD2.BaseSource")
+            {
+                Console.WriteLine("The source is a source! That's an error in the matrix.");
+                return;
+            }
+
             // check if i am already an output of controlEnd
             if (this.controlEnd.outputs.Contains(this.controlStart))
             {
