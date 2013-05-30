@@ -246,12 +246,23 @@ namespace OOD2
             {
                 foreach(BaseControl control in this.activeControls)
                 {
-                    this.controls.Remove(control);
-                    this.pictureBox1.Controls.Remove(control);
+                    this.removeControl(control);
                 }
                 this.activeControls.Clear();
                 this.btnDelete.Enabled = false;
                 this.pictureBox1.Invalidate();
+            }
+        }
+
+        private void removeControl(BaseControl control)
+        {
+            this.controls.Remove(control);
+            this.pictureBox1.Controls.Remove(control);
+            foreach (BaseControl c in this.controls) {
+                if (c.outputs.Contains(control))
+                {
+                    c.outputs.Remove(control);
+                }
             }
         }
 
