@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.Drawing;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 
 namespace OOD2
@@ -9,6 +10,7 @@ namespace OOD2
     public partial class BaseControl : PictureBox
     {
         private Image image;
+        public List<BaseControl> outputs = new List<BaseControl>();
 
         public BaseControl()
         {

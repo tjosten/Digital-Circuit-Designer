@@ -188,6 +188,19 @@ namespace OOD2
                 control.MouseUp += new MouseEventHandler(connectControlsEnd);
             }
 
+            // draw all controls
+            foreach (BaseControl control in this.controls)
+            {
+                // draw connections
+                if (control.outputs.Count > 0)
+                {
+                    foreach (BaseControl outputControl in control.outputs)
+                    {
+                        this.drawConnectControls(control, outputControl, gr);
+                    }
+                }
+            }
+
             // draw rectangles for active controls
             foreach(BaseControl control in this.activeControls)
             {
@@ -245,6 +258,32 @@ namespace OOD2
             this.controlStart = (BaseControl)sender;
         }
 
+        private void drawConnectControls(BaseControl controlStart, BaseControl controlEnd, Graphics gr)
+        {
+            if (controlStart == controlEnd)
+            {
+                Console.WriteLine("Cannot connect the same gates with each other, aborting.");
+                return;
+            }
+
+            Console.WriteLine(controlStart.ToString() + ":" + controlEnd.ToString());
+
+            // let's connect these..
+            Pen penBlack = new Pen(Color.Black, 3);
+            //Graphics gr = this.pictureBox1.CreateGraphics();
+
+            Point start = controlStart.tellPosition();
+            Point end = controlEnd.tellPosition();
+
+            // add the half-width and half-height of the controls from the points
+            start.X += controlStart.Width / 2;
+            start.Y += controlStart.Height / 2;
+            end.X += controlEnd.Width / 2;
+            end.Y += controlEnd.Height / 2;
+
+            gr.DrawLine(penBlack, start, end);
+        }
+
         public void connectControlsEnd(object sender, EventArgs e)
         {
             if (this.controlStart == null)
@@ -271,28 +310,22 @@ namespace OOD2
                 }
             }
 
-            if (this.controlStart == this.controlEnd)
+            // check if i am already an output of controlEnd
+            if (this.controlEnd.outputs.Contains(this.controlStart))
             {
-                Console.WriteLine("Cannot connect the same gates with each other, aborting.");
+                Console.WriteLine("I'm already an output, aborting!");
                 return;
             }
 
-            Console.WriteLine(this.controlStart.ToString() + ":" + this.controlEnd.ToString());
+            // check if i am already an output of controlStart
+            if (this.controlStart.outputs.Contains(this.controlEnd))
+            {
+                Console.WriteLine("I'm already an output, aborting!");
+                return;
+            }
 
-            // let's connect these..
-            Pen penBlack = new Pen(Color.Black, 3);
-            Graphics gr = this.pictureBox1.CreateGraphics();
-
-            Point start = this.controlStart.tellPosition();
-            Point end = this.controlEnd.tellPosition();
-
-            // add the half-width and half-height of the controls from the points
-            start.X += this.controlStart.Width / 2;
-            start.Y += this.controlStart.Height / 2;
-            end.X += this.controlEnd.Width / 2;
-            end.Y += this.controlEnd.Height / 2;
-            
-            gr.DrawLine(penBlack, start, end);
+            drawConnectControls(this.controlStart, this.controlEnd, this.pictureBox1.CreateGraphics());
+            this.controlStart.outputs.Add(this.controlEnd);
 
             this.controlStart = null;
             this.controlEnd = null;
