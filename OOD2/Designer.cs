@@ -350,6 +350,11 @@ namespace OOD2
                 }
             }
 
+            if (this.controlEnd == null)
+            {
+                return;
+            }
+
             // check if the end is a source, if so: abort
             if (this.controlEnd.GetType().ToString() == "OOD2.BaseSource")
             {
