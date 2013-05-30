@@ -258,6 +258,8 @@ namespace OOD2
         {
             this.controls.Remove(control);
             this.pictureBox1.Controls.Remove(control);
+
+            // remove connections where this control is defined as an output for others
             foreach (BaseControl c in this.controls) {
                 if (c.outputs.Contains(control))
                 {
