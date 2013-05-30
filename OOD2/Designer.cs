@@ -109,7 +109,7 @@ namespace OOD2
             control.draw(dropPoint, this.pictureBox1);
             control.Click += new EventHandler(controlClickHandler);
             control.MouseDown += new MouseEventHandler(connectControlsStart);
-            control.MouseEnter += new EventHandler(connectControlsOver);
+            control.MouseUp += new MouseEventHandler(connectControlsEnd);
 
             // add the control to the list
             this.controls.Add(control);
@@ -184,8 +184,8 @@ namespace OOD2
                 control.MouseDown += new MouseEventHandler(connectControlsStart);
 
                 // remove the event and add it again - prevents system from adding it twice
-                control.MouseEnter -= new EventHandler(connectControlsOver);
-                control.MouseEnter += new EventHandler(connectControlsOver);
+                control.MouseUp -= new MouseEventHandler(connectControlsEnd);
+                control.MouseUp += new MouseEventHandler(connectControlsEnd);
             }
 
             // draw rectangles for active controls
@@ -245,12 +245,31 @@ namespace OOD2
             this.controlStart = (BaseControl)sender;
         }
 
-        public void connectControlsOver(object sender, EventArgs e)
+        public void connectControlsEnd(object sender, EventArgs e)
         {
             if (this.controlStart == null)
                 return;
-            
-            this.controlEnd = (BaseControl)sender;
+
+            //this.controlEnd = (BaseControl)sender;
+
+            // get the controlEnd controll by the mouse position
+            Point mousePosition = this.pictureBox1.PointToClient(new Point(MousePosition.X, MousePosition.Y));
+            Console.WriteLine("Mouse position: " + mousePosition.X + ":" + mousePosition.Y);
+
+            // determine controlEnd
+            foreach (BaseControl control in this.controls)
+            {
+                Point controlPosition = control.tellPosition();
+
+                if (mousePosition.X >= controlPosition.X && mousePosition.X <= controlPosition.X + control.Width)
+                {
+                    if (mousePosition.Y >= controlPosition.Y && mousePosition.Y <= controlPosition.Y + control.Height)
+                    {
+                        this.controlEnd = control;
+                        break;
+                    }
+                }
+            }
 
             if (this.controlStart == this.controlEnd)
             {
