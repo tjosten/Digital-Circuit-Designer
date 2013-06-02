@@ -55,6 +55,12 @@
     <Compile Include="BaseSource.Designer.cs">
       <DependentUpon>BaseSource.cs</DependentUpon>
     </Compile>
+    <Compile Include="BaseSink.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BaseSink.Designer.cs">
+      <DependentUpon>BaseSink.cs</DependentUpon>
+    </Compile>
     <Compile Include="NotControl.cs">
       <SubType>Component</SubType>
     </Compile>

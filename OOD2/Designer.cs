@@ -38,6 +38,13 @@ namespace OOD2
             this.baseNotControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseNotControl_DoDragDrop);
 
             this.baseSource.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseSource_DoDragDrop);
+
+            this.baseSink.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseSink_DoDragDrop);
+        }
+
+        private void baseSink_DoDragDrop(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            this.baseSink.DoDragDrop(this.baseSink, DragDropEffects.Copy);
         }
 
         private void baseSource_DoDragDrop(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -113,6 +120,9 @@ namespace OOD2
                     break;
                 case "OOD2.BaseSource":
                     control = new BaseSource();
+                    break;
+                case "OOD2.BaseSink":
+                    control = new BaseSink();
                     break;
             }
 
@@ -268,27 +278,7 @@ namespace OOD2
             }
         }
 
-        private void baseAndControl_MouseDown(object sender, MouseEventArgs e)
-        {
-            this.dragSourceType = sender.GetType().ToString();
-        }
-
-        private void baseOrControl_MouseDown(object sender, MouseEventArgs e)
-        {
-            this.dragSourceType = sender.GetType().ToString();
-        }
-
-        private void baseXorControl_MouseDown(object sender, MouseEventArgs e)
-        {
-            this.dragSourceType = sender.GetType().ToString();
-        }
-
-        private void baseNotControl_MouseDown(object sender, MouseEventArgs e)
-        {
-            this.dragSourceType = sender.GetType().ToString();
-        }
-
-        private void baseSource_MouseDown(object sender, MouseEventArgs e)
+        private void control_MouseDown(object sender, MouseEventArgs e)
         {
             this.dragSourceType = sender.GetType().ToString();
         }

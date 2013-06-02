@@ -38,6 +38,7 @@
             this.baseOrControl = new OOD2.OrControl();
             this.baseAndControl = new OOD2.AndControl();
             this.testControl1 = new OOD2.BaseControl();
+            this.baseSink = new OOD2.BaseSink();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseNotControl)).BeginInit();
@@ -45,6 +46,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.baseOrControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseAndControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.testControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baseSink)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -88,7 +90,7 @@
             this.baseSource.Size = new System.Drawing.Size(37, 48);
             this.baseSource.TabIndex = 8;
             this.baseSource.TabStop = false;
-            this.baseSource.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseSource_MouseDown);
+            this.baseSource.MouseDown += new System.Windows.Forms.MouseEventHandler(this.control_MouseDown);
             // 
             // baseNotControl
             // 
@@ -99,7 +101,7 @@
             this.baseNotControl.Size = new System.Drawing.Size(75, 50);
             this.baseNotControl.TabIndex = 7;
             this.baseNotControl.TabStop = false;
-            this.baseNotControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseNotControl_MouseDown);
+            this.baseNotControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.control_MouseDown);
             // 
             // baseXorControl
             // 
@@ -110,7 +112,7 @@
             this.baseXorControl.Size = new System.Drawing.Size(75, 50);
             this.baseXorControl.TabIndex = 6;
             this.baseXorControl.TabStop = false;
-            this.baseXorControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseXorControl_MouseDown);
+            this.baseXorControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.control_MouseDown);
             // 
             // baseOrControl
             // 
@@ -121,7 +123,7 @@
             this.baseOrControl.Size = new System.Drawing.Size(75, 50);
             this.baseOrControl.TabIndex = 5;
             this.baseOrControl.TabStop = false;
-            this.baseOrControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseOrControl_MouseDown);
+            this.baseOrControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.control_MouseDown);
             // 
             // baseAndControl
             // 
@@ -132,7 +134,7 @@
             this.baseAndControl.Size = new System.Drawing.Size(75, 50);
             this.baseAndControl.TabIndex = 4;
             this.baseAndControl.TabStop = false;
-            this.baseAndControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseAndControl_MouseDown);
+            this.baseAndControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.control_MouseDown);
             // 
             // testControl1
             // 
@@ -143,11 +145,23 @@
             this.testControl1.TabIndex = 1;
             this.testControl1.TabStop = false;
             // 
+            // baseSink
+            // 
+            this.baseSink.AllowDrop = true;
+            this.baseSink.Image = global::OOD2.Properties.Resources.input_on;
+            this.baseSink.Location = new System.Drawing.Point(57, 290);
+            this.baseSink.Name = "baseSink";
+            this.baseSink.Size = new System.Drawing.Size(37, 58);
+            this.baseSink.TabIndex = 9;
+            this.baseSink.TabStop = false;
+            this.baseSink.MouseDown += new System.Windows.Forms.MouseEventHandler(this.control_MouseDown);
+            // 
             // Designer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(664, 605);
+            this.ClientSize = new System.Drawing.Size(656, 593);
+            this.Controls.Add(this.baseSink);
             this.Controls.Add(this.baseSource);
             this.Controls.Add(this.baseNotControl);
             this.Controls.Add(this.baseXorControl);
@@ -168,6 +182,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.baseOrControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseAndControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.testControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baseSink)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -183,6 +198,7 @@
         private XorControl baseXorControl;
         private NotControl baseNotControl;
         private BaseSource baseSource;
+        private BaseSink baseSink;
 
 
 
