@@ -29,36 +29,36 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Designer));
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.canvas = new System.Windows.Forms.PictureBox();
             this.btnRedraw = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
+            this.baseSink = new OOD2.BaseSink();
             this.baseSource = new OOD2.BaseSource();
             this.baseNotControl = new OOD2.NotControl();
             this.baseXorControl = new OOD2.XorControl();
             this.baseOrControl = new OOD2.OrControl();
             this.baseAndControl = new OOD2.AndControl();
             this.testControl1 = new OOD2.BaseControl();
-            this.baseSink = new OOD2.BaseSink();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baseSink)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseNotControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseXorControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseOrControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseAndControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.testControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.baseSink)).BeginInit();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // canvas
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(151, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(501, 578);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+            this.canvas.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.canvas.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.canvas.Location = new System.Drawing.Point(151, 12);
+            this.canvas.Name = "canvas";
+            this.canvas.Size = new System.Drawing.Size(501, 578);
+            this.canvas.TabIndex = 0;
+            this.canvas.TabStop = false;
+            this.canvas.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
             // 
             // btnRedraw
             // 
@@ -80,6 +80,17 @@
             this.btnDelete.Text = "Delete control(s)";
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // baseSink
+            // 
+            this.baseSink.AllowDrop = true;
+            this.baseSink.Image = global::OOD2.Properties.Resources.input_on;
+            this.baseSink.Location = new System.Drawing.Point(57, 290);
+            this.baseSink.Name = "baseSink";
+            this.baseSink.Size = new System.Drawing.Size(37, 58);
+            this.baseSink.TabIndex = 9;
+            this.baseSink.TabStop = false;
+            this.baseSink.MouseDown += new System.Windows.Forms.MouseEventHandler(this.control_MouseDown);
             // 
             // baseSource
             // 
@@ -145,17 +156,6 @@
             this.testControl1.TabIndex = 1;
             this.testControl1.TabStop = false;
             // 
-            // baseSink
-            // 
-            this.baseSink.AllowDrop = true;
-            this.baseSink.Image = global::OOD2.Properties.Resources.input_on;
-            this.baseSink.Location = new System.Drawing.Point(57, 290);
-            this.baseSink.Name = "baseSink";
-            this.baseSink.Size = new System.Drawing.Size(37, 58);
-            this.baseSink.TabIndex = 9;
-            this.baseSink.TabStop = false;
-            this.baseSink.MouseDown += new System.Windows.Forms.MouseEventHandler(this.control_MouseDown);
-            // 
             // Designer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -169,27 +169,27 @@
             this.Controls.Add(this.baseAndControl);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnRedraw);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.canvas);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(672, 632);
             this.MinimumSize = new System.Drawing.Size(672, 632);
             this.Name = "Designer";
             this.Text = "Designer";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.baseSink)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseNotControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseXorControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseOrControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseAndControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.testControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.baseSink)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox canvas;
         private BaseControl testControl1;
         private System.Windows.Forms.Button btnRedraw;
         private System.Windows.Forms.Button btnDelete;

@@ -13,10 +13,19 @@ namespace OOD2
     public partial class Designer : Form
     {
 
+        // list of all controls on the canvas
         List<Control> controls = new List<Control>();
+
+        // list of all controls selected (by left-clicking)
         List<Control> activeControls = new List<Control>();
+
+        // type of base source dragged right now
         String dragSourceType;
+
+        // control where current connection-line begins
         BaseControl controlStart;
+
+        // control where current connection-line ends
         BaseControl controlEnd;
 
         public Designer()
@@ -24,24 +33,21 @@ namespace OOD2
             InitializeComponent();
 
             // set AllowDrop to the canvas picture box
-            this.pictureBox1.AllowDrop = true;
+            this.canvas.AllowDrop = true;
             // bind the events to the canvas picture box
-            this.pictureBox1.DragEnter += new DragEventHandler(this.Canvas_OnDragEnter);
-            this.pictureBox1.DragOver += new DragEventHandler(this.Canvas_OnDragOver);
-            this.pictureBox1.DragDrop += new DragEventHandler(this.Canvas_OnDragDrop);
-            //this.pictureBox1.DragLeave += new DragEventHandler(this.Canvas_OnDragLeave);
+            this.canvas.DragEnter += new DragEventHandler(this.Canvas_OnDragEnter);
+            this.canvas.DragDrop += new DragEventHandler(this.Canvas_OnDragDrop);
 
             // allow the controls to be dragged
             this.baseAndControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseAndControl_DoDragDrop);
             this.baseOrControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseOrControl_DoDragDrop);
             this.baseXorControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseXorControl_DoDragDrop);
             this.baseNotControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseNotControl_DoDragDrop);
-
             this.baseSource.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseSource_DoDragDrop);
-
             this.baseSink.MouseDown += new System.Windows.Forms.MouseEventHandler(this.baseSink_DoDragDrop);
         }
 
+        // drag/drop events for all the base controls
         private void baseSink_DoDragDrop(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             this.baseSink.DoDragDrop(this.baseSink, DragDropEffects.Copy);
@@ -75,17 +81,10 @@ namespace OOD2
         private void Canvas_OnDragEnter(object sender, System.Windows.Forms.DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
-            
-        }
-
-        private void Canvas_OnDragOver(object sender, System.Windows.Forms.DragEventArgs e)
-        {
         }
 
         private void Canvas_OnDragDrop(object sender, System.Windows.Forms.DragEventArgs e)
         {
-            System.Console.WriteLine("Canvas_OnDragDrop");
-
             // determine drop position
             PictureBox canvas = (PictureBox)sender;
 
@@ -96,10 +95,9 @@ namespace OOD2
             x = ((int)(x / 10)) * 10;
             y = ((int)(y / 10)) * 10;
 
-            Point dropPoint = this.pictureBox1.PointToClient(new Point(x, y));
+            Point dropPoint = this.canvas.PointToClient(new Point(x, y));
 
             System.Console.WriteLine("Drop Position: " + dropPoint.X + ":" + dropPoint.Y);
-
             System.Console.WriteLine("Drop type: " + this.dragSourceType);
 
             // add the thing to the canvas
@@ -125,14 +123,17 @@ namespace OOD2
                     control = new BaseSink();
                     break;
             }
-
-            control.draw(dropPoint, this.pictureBox1);
+            // draw it on the canvas
+            control.draw(dropPoint, this.canvas);
             control.MouseClick += new MouseEventHandler(controlClickHandler);
             control.MouseDown += new MouseEventHandler(connectControlsStart);
             control.MouseUp += new MouseEventHandler(connectControlsEnd);
 
             // add the control to the list
             this.controls.Add(control);
+
+            // redraw the canvas
+            this.canvas.Invalidate();
         }
 
         private void Canvas_OnDragLeave(object sender, System.Windows.Forms.DragEventArgs e)
@@ -153,7 +154,7 @@ namespace OOD2
                     // toggle here
                     BaseSource sourceControl = (BaseSource)sender;
                     sourceControl.toggle();
-                    this.pictureBox1.Invalidate();
+                    this.canvas.Invalidate();
                 }
                 return;
             }
@@ -168,8 +169,7 @@ namespace OOD2
                     btnDelete.Enabled = false;
                 }
 
-                this.pictureBox1.Invalidate();
-
+                this.canvas.Invalidate();
                 return;
             }
 
@@ -180,7 +180,7 @@ namespace OOD2
             btnDelete.Enabled = true;
 
             // redraw canvas
-            this.pictureBox1.Invalidate();
+            this.canvas.Invalidate();
         }
 
         // paint everything on the canvas
@@ -221,10 +221,10 @@ namespace OOD2
                 control.MouseUp += new MouseEventHandler(connectControlsEnd);
             }
 
-            // draw all controls
+            // draw all connections
             foreach (BaseControl control in this.controls)
             {
-                // draw connections
+                // draw connections if existing
                 if (control.outputs.Count > 0)
                 {
                     foreach (BaseControl outputControl in control.outputs)
@@ -246,7 +246,7 @@ namespace OOD2
 
         private void btnRedraw_Click(object sender, EventArgs e)
         {
-            this.pictureBox1.Invalidate();
+            this.canvas.Invalidate();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -260,14 +260,14 @@ namespace OOD2
                 }
                 this.activeControls.Clear();
                 this.btnDelete.Enabled = false;
-                this.pictureBox1.Invalidate();
+                this.canvas.Invalidate();
             }
         }
 
         private void removeControl(BaseControl control)
         {
             this.controls.Remove(control);
-            this.pictureBox1.Controls.Remove(control);
+            this.canvas.Controls.Remove(control);
 
             // remove connections where this control is defined as an output for others
             foreach (BaseControl c in this.controls) {
@@ -278,16 +278,19 @@ namespace OOD2
             }
         }
 
+        // set the type of base control which is dragged right now
         private void control_MouseDown(object sender, MouseEventArgs e)
         {
             this.dragSourceType = sender.GetType().ToString();
         }
 
+        // set the start control during the connection-line process
         public void connectControlsStart(object sender, MouseEventArgs e)
         {
             this.controlStart = (BaseControl)sender;
         }
 
+        // connect two controls with each other
         private void drawConnectControls(BaseControl controlStart, BaseControl controlEnd, Graphics gr)
         {
             if (controlStart == controlEnd)
@@ -300,8 +303,6 @@ namespace OOD2
 
             // let's connect these..
             Pen penBlack = new Pen(Color.Black, 3);
-            //Graphics gr = this.pictureBox1.CreateGraphics();
-
             Point start = controlStart.tellPosition();
             Point end = controlEnd.tellPosition();
 
@@ -311,18 +312,18 @@ namespace OOD2
             end.X += controlEnd.Width / 2;
             end.Y += controlEnd.Height / 2;
 
+            // draw the line!
             gr.DrawLine(penBlack, start, end);
         }
 
+        // end event of connection-line process
         public void connectControlsEnd(object sender, EventArgs e)
         {
             if (this.controlStart == null)
                 return;
 
-            //this.controlEnd = (BaseControl)sender;
-
             // get the controlEnd controll by the mouse position
-            Point mousePosition = this.pictureBox1.PointToClient(new Point(MousePosition.X, MousePosition.Y));
+            Point mousePosition = this.canvas.PointToClient(new Point(MousePosition.X, MousePosition.Y));
             Console.WriteLine("Mouse position: " + mousePosition.X + ":" + mousePosition.Y);
 
             // determine controlEnd
@@ -340,6 +341,7 @@ namespace OOD2
                 }
             }
 
+            // whoops, where somewhere on the canvas where no control is at all.
             if (this.controlEnd == null)
             {
                 return;
@@ -366,7 +368,7 @@ namespace OOD2
                 return;
             }
 
-            drawConnectControls(this.controlStart, this.controlEnd, this.pictureBox1.CreateGraphics());
+            drawConnectControls(this.controlStart, this.controlEnd, this.canvas.CreateGraphics());
             this.controlStart.outputs.Add(this.controlEnd);
 
             this.controlStart = null;
