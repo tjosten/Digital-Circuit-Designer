@@ -14,14 +14,12 @@ namespace OOD2
 
         public BaseControl()
         {
-            //this.init();
             // allow drag & drop
             this.AllowDrop = true;
         }
 
         protected virtual void init(System.Drawing.Image image)
         {
-            //image = Image.FromFile("C:\\Users\\Timo Josten\\Documents\\GitHub\\OOD2-Assignment\\OOD2\\img\\and.jpg");
             this.image = image;
             this.Image = image;
             this.Height = image.Height;
