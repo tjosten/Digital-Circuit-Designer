@@ -15,7 +15,7 @@ namespace OOD2
 
         public BaseSource()
         {
-            this.init(Image.FromFile("C:\\Users\\Timo Josten\\Documents\\GitHub\\OOD2-Assignment\\OOD2\\img\\source-on.png"));
+            this.init(Properties.Resources.source_on);
             // allow drag & drop
             this.AllowDrop = true;
         }
@@ -25,12 +25,12 @@ namespace OOD2
             if (this.status)
             {
                 this.status = false;
-                this.Image = Image.FromFile("C:\\Users\\Timo Josten\\Documents\\GitHub\\OOD2-Assignment\\OOD2\\img\\source-off.png");
+                this.Image = Properties.Resources.source_off;
             }
             else
             {
                 this.status = true;
-                this.Image = Image.FromFile("C:\\Users\\Timo Josten\\Documents\\GitHub\\OOD2-Assignment\\OOD2\\img\\source-on.png");
+                this.Image = Properties.Resources.source_on; ;
             }
         }
     }

@@ -10,7 +10,7 @@ namespace OOD2
     {
         public AndControl()
         {
-            System.Drawing.Image image = System.Drawing.Image.FromFile("C:\\Users\\Timo Josten\\Documents\\GitHub\\OOD2-Assignment\\OOD2\\img\\and.png");
+            System.Drawing.Image image = Properties.Resources.and;
             base.init(image);
             this.AllowDrop = true;
         }

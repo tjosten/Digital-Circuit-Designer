@@ -95,6 +95,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -112,6 +113,16 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="img\and.jpg" />
+    <Content Include="img\and.png" />
+    <Content Include="img\input-off.png" />
+    <Content Include="img\input-on.png" />
+    <Content Include="img\not.png" />
+    <Content Include="img\or.png" />
+    <Content Include="img\source-off.png" />
+    <Content Include="img\source-on.png" />
+    <Content Include="img\source.png" />
+    <Content Include="img\xor.png" />
+    <None Include="Resources\andControl.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

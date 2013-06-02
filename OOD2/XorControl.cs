@@ -10,7 +10,7 @@ namespace OOD2
     {
         public XorControl()
         {
-            System.Drawing.Image image = System.Drawing.Image.FromFile("C:\\Users\\Timo Josten\\Documents\\GitHub\\OOD2-Assignment\\OOD2\\img\\xor.png");
+            System.Drawing.Image image = Properties.Resources.xor;
             base.init(image);
             this.AllowDrop = true;
         }
