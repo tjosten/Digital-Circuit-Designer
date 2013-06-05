@@ -19,6 +19,11 @@ namespace OOD2
             this.AllowDrop = true;
         }
 
+        public bool getStatus()
+        {
+            return this.status;
+        }
+
         public void on()
         {
             this.status = true;
