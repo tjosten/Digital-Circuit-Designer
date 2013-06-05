@@ -285,7 +285,7 @@ namespace OOD2
         }
 
         // set the start control during the connection-line process
-        public void connectControlsStart(object sender, MouseEventArgs e)
+        private void connectControlsStart(object sender, MouseEventArgs e)
         {
             this.controlStart = (BaseControl)sender;
         }
@@ -317,7 +317,7 @@ namespace OOD2
         }
 
         // end event of connection-line process
-        public void connectControlsEnd(object sender, EventArgs e)
+        private void connectControlsEnd(object sender, EventArgs e)
         {
             if (this.controlStart == null)
                 return;
