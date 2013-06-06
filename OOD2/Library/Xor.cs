@@ -8,21 +8,25 @@ namespace OOD2.Library
 {
     class Xor : OOD2.Library.Interfaces.Gate
     {
-
-        private List<OOD2.Library.Input> inputs;
-
         public Xor()
         {
-            // the and-switch has a maximum of 2 inputs
-            this.inputs = new List<OOD2.Library.Input>(2);
         }
 
-        public bool run()
+        public new bool run(int a, int b)
         {
-            // we assume the outcome is true, until proven otherwise
-            //TODO: to be done
+            bool a2, b2;
 
-            return true;
+            if (a == 1)
+                a2 = true;
+            else
+                a2 = false;
+
+            if (b == 1)
+                b2 = true;
+            else
+                b2 = false;
+            
+            return a2 ^ b2;
         }
     }
 }

@@ -17,5 +17,11 @@ namespace OOD2
             // assign gate to control
             this.gate = new Library.And();
         }
+
+        public bool checkStatus()
+        {
+            Library.And and = (Library.And)this.gate;
+            return and.run(this.inputs[0].currentState, this.inputs[1].currentState);
+        }
     }
 }

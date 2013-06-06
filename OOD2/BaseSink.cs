@@ -9,7 +9,6 @@ namespace OOD2
 {
     public partial class BaseSink : BaseControl
     {
-        private Image image;
         private bool status = true;
 
         public BaseSink()

@@ -9,7 +9,6 @@ namespace OOD2
 {
     public partial class BaseSource : BaseControl
     {
-        private Image image;
         public new List<BaseControl> outputs = new List<BaseControl>();
         private bool status = true;
 

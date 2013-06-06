@@ -113,11 +113,8 @@
       <DependentUpon>Designer.cs</DependentUpon>
     </Compile>
     <Compile Include="Library\And.cs" />
-    <Compile Include="Library\Input.cs" />
     <Compile Include="Library\Interfaces\Gate.cs" />
-    <Compile Include="Library\Interfaces\Source.cs" />
     <Compile Include="Library\Not.cs" />
-    <Compile Include="Library\Switch.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BaseControl.cs">

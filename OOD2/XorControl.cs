@@ -17,5 +17,11 @@ namespace OOD2
             // assign gate to control
             this.gate = new Library.Xor();
         }
+
+        public bool checkStatus()
+        {
+            Library.Xor xor = (Library.Xor)this.gate;
+            return xor.run(this.inputs[0].currentState, this.inputs[1].currentState);
+        }
     }
 }

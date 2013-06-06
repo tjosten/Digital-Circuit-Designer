@@ -11,7 +11,7 @@ namespace OOD2.Library.Interfaces
         // run method;
         // this is where the magic depending on the gate typs happens
         // returns either true (if the operation is a success) or false
-        public virtual bool run()  {
+        public virtual bool run(int a, int b)  {
             return false;
         }
     }

@@ -364,6 +364,7 @@ namespace OOD2
             if (this.controlEnd.inputs.Count == 2)
             {
                 Console.WriteLine("The end already has 2 inputs!");
+                return;
             }
 
             // check if the end is a source, if so: abort
@@ -409,7 +410,7 @@ namespace OOD2
             this.controlEnd = null;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void run_Click(object sender, EventArgs e)
         {
             if (this.isIterating)
             {
@@ -418,23 +419,24 @@ namespace OOD2
             // TODO set all currentState to -1
             this.isIterating = true;
             this.foundUnknown = true;
-            stromausfall();
-            int iterations = 0;
+            cutPower();
+            //int iterations = 0;
             while (this.foundUnknown)
             {
-                if (++iterations > 10000)
+                // this was to stop endless loops while debugging
+                /*if (++iterations > 10000)
                 {
                     break;
-                }
+                }*/
                 this.foundUnknown = false;
                 foreach (BaseControl control in this.controls)
                 {
                     if (control.GetType().ToString() == "OOD2.BaseSource")
                     {
                         BaseSource quelle = (BaseSource)control;
-                        if (quelle.getStatus())
+                        if (/*quelle.getStatus()*/true) // we always have to do that, because of the NotControl!
                         {
-                            ghettoIterator(control, null);
+                            recursiveIterator(control, null);
                         }
 
                     }
@@ -443,7 +445,7 @@ namespace OOD2
             this.isIterating = false;
         }
 
-        private void stromausfall()
+        private void cutPower()
         {
             foreach (BaseControl control in this.controls)
             {
@@ -459,110 +461,94 @@ namespace OOD2
             }
         }
 
-        private void ghettoIterator(BaseControl control, BaseControl lastControl = null)
+        private void recursiveIterator(BaseControl control, BaseControl lastControl = null)
         {
             foreach (BaseControl subcontrol in control.outputs)
             {
                 if (subcontrol.GetType().ToString() == "OOD2.BaseSink") {
                     // HEUREKA
                     BaseSink senke = (BaseSink)subcontrol;
-                    switch (senke.inputs[0].currentState)
+
+                    foreach (BaseControl input in senke.inputs)
                     {
-                        case -1:
+                        if (input.currentState == -1)
                             this.foundUnknown = true;
-                            break;
-                        case 0:
+                        else if (input.currentState == 0)
                             senke.off();
-                            break;
-                        case 1:
+                        else if (input.currentState == 1)
+                        {
                             senke.on();
                             break;
+                        }
                     }
                 } else {
-                    if (subcontrol.GetType().ToString() == "OOD2.AndControl")
-                    {
-                        AndControl und = (AndControl)subcontrol;
 
-                        if (und.inputs.Count != 2)
-                        {
+                    if (subcontrol.inputs.Count != 2)
+                        if (subcontrol.GetType().ToString() != "OOD2.NotControl")
+                            continue;
+                        else {
+                            // special exception for NotControl as it can has only 1 input
+                            NotControl not = (NotControl)subcontrol;
+                            
+                            if (not.getSingleInput() == null)
+                                continue;
+
+                            if (not.getSingleInput().currentState > -1)
+                            {
+                                if (not.checkStatus())
+                                    not.currentState = 1;
+                                else
+                                    not.currentState = 0;
+                            }
+                            else
+                            {
+                                this.foundUnknown = true;
+                            }
+                            recursiveIterator(subcontrol, control);
                             continue;
                         }
 
-                        if (und.inputs[0].currentState > -1 &&
-                            und.inputs[1].currentState > -1)
-                        {
-                            // actual AND gate implementation
-                            if (und.inputs[0].currentState == 1 && und.inputs[1].currentState == 1)
-                                und.currentState = 1;
-                            else
-                                und.currentState = 0;
-                        }
-                        else
-                        {
-                            this.foundUnknown = true;
-                            // dann halt nicht, BBL
-                        }
-                    }
-                    else if (subcontrol.GetType().ToString() == "OOD2.OrControl")
+                    if (subcontrol.inputs[0].currentState > -1 &&
+                        subcontrol.inputs[1].currentState > -1)
                     {
-                        OrControl or = (OrControl)subcontrol;
-
-                        if (or.inputs.Count != 2)
+                        switch (subcontrol.GetType().ToString())
                         {
-                            continue;
-                        }
-
-                        if (or.inputs[0].currentState > -1 &&
-                            or.inputs[1].currentState > -1)
-                        {
-                            // actual OR gate implementation
-                            if (or.inputs[0].currentState == 1 || or.inputs[1].currentState == 1)
-                                or.currentState = 1;
-                            else
-                                or.currentState = 0;
-                        }
-                        else
-                        {
-                            this.foundUnknown = true;
+                            case "OOD2.AndControl":
+                                AndControl and = (AndControl)subcontrol;
+                                if (and.checkStatus())
+                                    and.currentState = 1;
+                                else
+                                    and.currentState = 0;
+                                break;
+                            case "OOD2.OrControl":
+                                OrControl or = (OrControl)subcontrol;
+                                if (or.checkStatus())
+                                    or.currentState = 1;
+                                else
+                                    or.currentState = 0;
+                                break;
+                            case "OOD2.XorControl":
+                                XorControl xor = (XorControl)subcontrol;
+                                if (xor.checkStatus())
+                                    xor.currentState = 1;
+                                else
+                                    xor.currentState = 0;
+                                break;
+                            case "OOD2.NotControl":
+                                NotControl not = (NotControl)subcontrol;
+                                if (not.checkStatus())
+                                    not.currentState = 1;
+                                else
+                                    not.currentState = 0;
+                                break;
                         }
                     }
-                    else if (subcontrol.GetType().ToString() == "OOD2.XorControl")
+                    else
                     {
-                        XorControl xor = (XorControl)subcontrol;
-
-                        if (xor.inputs.Count != 2)
-                        {
-                            continue;
-                        }
-
-                        if (xor.inputs[0].currentState > -1 &&
-                            xor.inputs[1].currentState > -1)
-                        {
-                            // actual OR gate implementation
-                            bool a, b;
-
-                            if (xor.inputs[0].currentState == 1)
-                                a = true;
-                            else
-                                a = false;
-
-                            if (xor.inputs[1].currentState == 1)
-                                b = true;
-                            else
-                                b = false;
-
-                            if (a ^ b)
-                                xor.currentState = 1;
-                            else
-                                xor.currentState = 0;
-                        }
-                        else
-                        {
-                            this.foundUnknown = true;
-                        }
+                        this.foundUnknown = true;
                     }
 
-                    ghettoIterator(subcontrol, control);
+                    recursiveIterator(subcontrol, control);
                 }
             }
         }
