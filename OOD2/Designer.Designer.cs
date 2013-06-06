@@ -39,6 +39,7 @@
             this.baseOrControl = new OOD2.OrControl();
             this.baseAndControl = new OOD2.AndControl();
             this.testControl1 = new OOD2.BaseControl();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseSink)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.baseSource)).BeginInit();
@@ -156,11 +157,22 @@
             this.testControl1.TabIndex = 1;
             this.testControl1.TabStop = false;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 475);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(101, 48);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "Run";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Designer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(656, 593);
+            this.ClientSize = new System.Drawing.Size(664, 605);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.baseSink);
             this.Controls.Add(this.baseSource);
             this.Controls.Add(this.baseNotControl);
@@ -199,6 +211,7 @@
         private NotControl baseNotControl;
         private BaseSource baseSource;
         private BaseSink baseSink;
+        private System.Windows.Forms.Button button1;
 
 
 

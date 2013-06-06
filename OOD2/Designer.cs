@@ -28,6 +28,10 @@ namespace OOD2
         // control where current connection-line ends
         BaseControl controlEnd;
 
+        // hätte man auch schöner benennen können #FIXME #YOLO
+        bool isIterating = false;
+        bool foundUnknown = false;
+
         public Designer()
         {
             InitializeComponent();
@@ -276,6 +280,15 @@ namespace OOD2
                     c.outputs.Remove(control);
                 }
             }
+
+            // remove connections where this control is defined as an input for others
+            foreach (BaseControl c in this.controls)
+            {
+                if (c.inputs.Contains(control))
+                {
+                    c.inputs.Remove(control);
+                }
+            }
         }
 
         // set the type of base control which is dragged right now
@@ -347,10 +360,30 @@ namespace OOD2
                 return;
             }
 
+            // check if controlEnd has already 2 inputs
+            if (this.controlEnd.inputs.Count == 2)
+            {
+                Console.WriteLine("The end already has 2 inputs!");
+            }
+
             // check if the end is a source, if so: abort
             if (this.controlEnd.GetType().ToString() == "OOD2.BaseSource")
             {
                 Console.WriteLine("The source is a source! That's an error in the matrix.");
+                return;
+            }
+
+            // check if i am already an input of controlEnd
+            if (this.controlEnd.inputs.Contains(this.controlStart))
+            {
+                Console.WriteLine("I'm already an input, aborting!");
+                return;
+            }
+
+            // check if i am already an input of controlStart
+            if (this.controlStart.inputs.Contains(this.controlEnd))
+            {
+                Console.WriteLine("I'm already an input, aborting!");
                 return;
             }
 
@@ -370,9 +403,169 @@ namespace OOD2
 
             drawConnectControls(this.controlStart, this.controlEnd, this.canvas.CreateGraphics());
             this.controlStart.outputs.Add(this.controlEnd);
+            this.controlEnd.inputs.Add(this.controlStart);
 
             this.controlStart = null;
             this.controlEnd = null;
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (this.isIterating)
+            {
+                return;
+            }
+            // TODO set all currentState to -1
+            this.isIterating = true;
+            this.foundUnknown = true;
+            stromausfall();
+            int iterations = 0;
+            while (this.foundUnknown)
+            {
+                if (++iterations > 10000)
+                {
+                    break;
+                }
+                this.foundUnknown = false;
+                foreach (BaseControl control in this.controls)
+                {
+                    if (control.GetType().ToString() == "OOD2.BaseSource")
+                    {
+                        BaseSource quelle = (BaseSource)control;
+                        if (quelle.getStatus())
+                        {
+                            ghettoIterator(control, null);
+                        }
+
+                    }
+                }
+            }
+            this.isIterating = false;
+        }
+
+        private void stromausfall()
+        {
+            foreach (BaseControl control in this.controls)
+            {
+                if (control.GetType().ToString() == "OOD2.BaseSink")
+                {
+                    BaseSink senke = (BaseSink)control;
+                    senke.off();
+                }
+                else if (control.GetType().ToString() != "OOD2.BaseSource")
+                {
+                    control.currentState = -1;
+                }
+            }
+        }
+
+        private void ghettoIterator(BaseControl control, BaseControl lastControl = null)
+        {
+            foreach (BaseControl subcontrol in control.outputs)
+            {
+                if (subcontrol.GetType().ToString() == "OOD2.BaseSink") {
+                    // HEUREKA
+                    BaseSink senke = (BaseSink)subcontrol;
+                    switch (senke.inputs[0].currentState)
+                    {
+                        case -1:
+                            this.foundUnknown = true;
+                            break;
+                        case 0:
+                            senke.off();
+                            break;
+                        case 1:
+                            senke.on();
+                            break;
+                    }
+                } else {
+                    if (subcontrol.GetType().ToString() == "OOD2.AndControl")
+                    {
+                        AndControl und = (AndControl)subcontrol;
+
+                        if (und.inputs.Count != 2)
+                        {
+                            continue;
+                        }
+
+                        if (und.inputs[0].currentState > -1 &&
+                            und.inputs[1].currentState > -1)
+                        {
+                            // actual AND gate implementation
+                            if (und.inputs[0].currentState == 1 && und.inputs[1].currentState == 1)
+                                und.currentState = 1;
+                            else
+                                und.currentState = 0;
+                        }
+                        else
+                        {
+                            this.foundUnknown = true;
+                            // dann halt nicht, BBL
+                        }
+                    }
+                    else if (subcontrol.GetType().ToString() == "OOD2.OrControl")
+                    {
+                        OrControl or = (OrControl)subcontrol;
+
+                        if (or.inputs.Count != 2)
+                        {
+                            continue;
+                        }
+
+                        if (or.inputs[0].currentState > -1 &&
+                            or.inputs[1].currentState > -1)
+                        {
+                            // actual OR gate implementation
+                            if (or.inputs[0].currentState == 1 || or.inputs[1].currentState == 1)
+                                or.currentState = 1;
+                            else
+                                or.currentState = 0;
+                        }
+                        else
+                        {
+                            this.foundUnknown = true;
+                        }
+                    }
+                    else if (subcontrol.GetType().ToString() == "OOD2.XorControl")
+                    {
+                        XorControl xor = (XorControl)subcontrol;
+
+                        if (xor.inputs.Count != 2)
+                        {
+                            continue;
+                        }
+
+                        if (xor.inputs[0].currentState > -1 &&
+                            xor.inputs[1].currentState > -1)
+                        {
+                            // actual OR gate implementation
+                            bool a, b;
+
+                            if (xor.inputs[0].currentState == 1)
+                                a = true;
+                            else
+                                a = false;
+
+                            if (xor.inputs[1].currentState == 1)
+                                b = true;
+                            else
+                                b = false;
+
+                            if (a ^ b)
+                                xor.currentState = 1;
+                            else
+                                xor.currentState = 0;
+                        }
+                        else
+                        {
+                            this.foundUnknown = true;
+                        }
+                    }
+
+                    ghettoIterator(subcontrol, control);
+                }
+            }
+        }
+
     }
 }

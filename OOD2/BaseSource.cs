@@ -18,6 +18,7 @@ namespace OOD2
             this.init(Properties.Resources.source_on);
             // allow drag & drop
             this.AllowDrop = true;
+            this.currentState = 1;
         }
 
         public bool getStatus()
@@ -29,11 +30,13 @@ namespace OOD2
         {
             if (this.status)
             {
+                this.currentState = 0;
                 this.status = false;
                 this.Image = Properties.Resources.source_off;
             }
             else
             {
+                this.currentState = 1;
                 this.status = true;
                 this.Image = Properties.Resources.source_on; ;
             }
