@@ -59,7 +59,7 @@
             this.canvas.Size = new System.Drawing.Size(501, 578);
             this.canvas.TabIndex = 0;
             this.canvas.TabStop = false;
-            this.canvas.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+            this.canvas.Paint += new System.Windows.Forms.PaintEventHandler(this.Canvas_Paint);
             // 
             // btnRedraw
             // 

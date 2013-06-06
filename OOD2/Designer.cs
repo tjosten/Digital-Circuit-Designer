@@ -188,7 +188,7 @@ namespace OOD2
         }
 
         // paint everything on the canvas
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        private void Canvas_Paint(object sender, PaintEventArgs e)
         {
 
             PictureBox pb = (PictureBox)sender;
