@@ -32,9 +32,15 @@ namespace OOD2
         bool isIterating = false;
         bool foundUnknown = false;
 
+        // splash screen
+        Splash splash;
+
         public Designer()
         {
             InitializeComponent();
+
+            this.splash = new Splash();
+            splash.Show();
 
             // set AllowDrop to the canvas picture box
             this.canvas.AllowDrop = true;

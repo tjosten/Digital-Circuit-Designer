@@ -211,6 +211,7 @@
             this.MaximumSize = new System.Drawing.Size(626, 766);
             this.MinimumSize = new System.Drawing.Size(626, 766);
             this.Name = "Designer";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Designer";
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
             this.groupBox1.ResumeLayout(false);
