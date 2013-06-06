@@ -89,6 +89,9 @@ namespace OOD2
 
         private void Canvas_OnDragDrop(object sender, System.Windows.Forms.DragEventArgs e)
         {
+            if (this.isIterating)
+                return;
+
             // determine drop position
             PictureBox canvas = (PictureBox)sender;
 
@@ -148,6 +151,10 @@ namespace OOD2
         // click handler for controls
         public void controlClickHandler(object sender, MouseEventArgs e)
         {
+
+            if (this.isIterating)
+                return;
+
             BaseControl control = (BaseControl)sender;
 
             // check if we want to toggle something
@@ -315,15 +322,43 @@ namespace OOD2
             Console.WriteLine(controlStart.ToString() + ":" + controlEnd.ToString());
 
             // let's connect these..
-            Pen penBlack = new Pen(Color.Black, 3);
+            Pen penBlack = new Pen(Color.Gray, 2);
             Point start = controlStart.tellPosition();
             Point end = controlEnd.tellPosition();
+
+            System.Drawing.Drawing2D.AdjustableArrowCap bigArrow = new System.Drawing.Drawing2D.AdjustableArrowCap(7, 7);
+            penBlack.StartCap = System.Drawing.Drawing2D.LineCap.Square;
+            penBlack.CustomEndCap = bigArrow;
 
             // add the half-width and half-height of the controls from the points
             start.X += controlStart.Width / 2;
             start.Y += controlStart.Height / 2;
             end.X += controlEnd.Width / 2;
             end.Y += controlEnd.Height / 2;
+
+            // determine where to exactly put the arrow..
+
+            /*if (controlStart.tellPosition().X > controlEnd.tellPosition().X)
+            {
+                // we want to have the right side
+                //end.X += controlEnd.Width / 2;
+            }
+            else if (controlStart.tellPosition().X < controlEnd.tellPosition().X)
+            {
+                // we want to have the left side
+                //end.X -= controlEnd.Width / 2;  
+            }*/
+
+            if (controlStart.tellPosition().Y > controlEnd.tellPosition().Y)
+            {
+                // we want to have the upper side
+                end.Y += controlEnd.Height / 2;
+            }
+            else if (controlStart.tellPosition().Y < controlEnd.tellPosition().Y)
+            {
+                // we want to have the lower side
+                end.Y -= controlEnd.Height / 2;
+            }
 
             // draw the line!
             gr.DrawLine(penBlack, start, end);
@@ -416,18 +451,20 @@ namespace OOD2
             {
                 return;
             }
-            // TODO set all currentState to -1
             this.isIterating = true;
             this.foundUnknown = true;
             cutPower();
-            //int iterations = 0;
+
+            // disable some buttons
+            btnRun.Enabled = false;
+            btnRedraw.Enabled = false;
+            
+            // unselect all controls
+            this.activeControls.Clear();
+            this.canvas.Invalidate();
+
             while (this.foundUnknown)
             {
-                // this was to stop endless loops while debugging
-                /*if (++iterations > 10000)
-                {
-                    break;
-                }*/
                 this.foundUnknown = false;
                 foreach (BaseControl control in this.controls)
                 {
@@ -442,6 +479,10 @@ namespace OOD2
                     }
                 }
             }
+
+            btnRun.Enabled = true;
+            btnRedraw.Enabled = true;
+
             this.isIterating = false;
         }
 
@@ -551,6 +592,11 @@ namespace OOD2
                     recursiveIterator(subcontrol, control);
                 }
             }
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            // TODO: open help window here
         }
 
     }
