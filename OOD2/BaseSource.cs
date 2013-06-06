@@ -10,7 +10,7 @@ namespace OOD2
     public partial class BaseSource : BaseControl
     {
         private Image image;
-        public List<BaseControl> outputs = new List<BaseControl>();
+        public new List<BaseControl> outputs = new List<BaseControl>();
         private bool status = true;
 
         public BaseSource()

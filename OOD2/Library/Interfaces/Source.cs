@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OOD2.Library.Interfaces
 {
-    interface Source
+    public abstract class Source
     {
         // describes the current state of this source;
         // can be either true or false
@@ -18,6 +18,8 @@ namespace OOD2.Library.Interfaces
 
         // click handler for the source;
         // when clicked, the current state changes
-        void clickHandler();
+        public virtual void clickHandler()
+        {
+        }
     }
 }

@@ -13,6 +13,9 @@ namespace OOD2
             System.Drawing.Image image = Properties.Resources.or;
             base.init(image);
             this.AllowDrop = true;
+
+            // assign gate to control
+            this.gate = new Library.Or();
         }
     }
 }

@@ -95,6 +95,8 @@
     <Compile Include="BaseSink.Designer.cs">
       <DependentUpon>BaseSink.cs</DependentUpon>
     </Compile>
+    <Compile Include="Library\Xor.cs" />
+    <Compile Include="Library\Or.cs" />
     <Compile Include="NotControl.cs">
       <SubType>Component</SubType>
     </Compile>

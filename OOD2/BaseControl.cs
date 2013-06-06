@@ -11,6 +11,7 @@ namespace OOD2
     {
         private Image image;
         public List<BaseControl> outputs = new List<BaseControl>();
+        protected OOD2.Library.Interfaces.Gate gate;
 
         public BaseControl()
         {
