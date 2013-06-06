@@ -141,6 +141,9 @@ namespace OOD2
 
             // redraw the canvas
             this.canvas.Invalidate();
+
+            // trigger run
+            btnRun.PerformClick();
         }
 
         private void Canvas_OnDragLeave(object sender, System.Windows.Forms.DragEventArgs e)
@@ -167,6 +170,8 @@ namespace OOD2
                     sourceControl.toggle();
                     this.canvas.Invalidate();
                 }
+                // trigger run
+                btnRun.PerformClick();
                 return;
             }
 
@@ -258,6 +263,9 @@ namespace OOD2
         private void btnRedraw_Click(object sender, EventArgs e)
         {
             this.canvas.Invalidate();
+
+            // trigger run
+            btnRun.PerformClick();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -273,6 +281,9 @@ namespace OOD2
                 this.btnDelete.Enabled = false;
                 this.canvas.Invalidate();
             }
+
+            // trigger run
+            btnRun.PerformClick();
         }
 
         private void removeControl(BaseControl control)
@@ -322,7 +333,23 @@ namespace OOD2
             Console.WriteLine(controlStart.ToString() + ":" + controlEnd.ToString());
 
             // let's connect these..
-            Pen penBlack = new Pen(Color.Gray, 2);
+
+            Color color;
+
+            if (controlStart.currentState == 1)
+            {
+                color = Color.Green;
+            }
+            else if (controlStart.currentState == 0)
+            {
+                color = Color.Red;
+            }
+            else
+            {
+                color = Color.Gray;
+            }
+
+            Pen penBlack = new Pen(color, 2);
             Point start = controlStart.tellPosition();
             Point end = controlEnd.tellPosition();
 
@@ -443,6 +470,9 @@ namespace OOD2
 
             this.controlStart = null;
             this.controlEnd = null;
+
+            // trigger run
+            btnRun.PerformClick();
         }
 
         private void run_Click(object sender, EventArgs e)
@@ -509,6 +539,9 @@ namespace OOD2
                 if (subcontrol.GetType().ToString() == "OOD2.BaseSink") {
                     // HEUREKA
                     BaseSink senke = (BaseSink)subcontrol;
+
+                    // invalidate canvas
+                    canvas.Invalidate();
 
                     foreach (BaseControl input in senke.inputs)
                     {

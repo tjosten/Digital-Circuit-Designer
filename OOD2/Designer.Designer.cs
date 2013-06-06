@@ -34,6 +34,7 @@
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnRun = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnHelp = new System.Windows.Forms.Button();
             this.baseAndControl = new OOD2.AndControl();
             this.baseOrControl = new OOD2.OrControl();
             this.baseSink = new OOD2.BaseSink();
@@ -41,7 +42,6 @@
             this.baseSource = new OOD2.BaseSource();
             this.baseNotControl = new OOD2.NotControl();
             this.testControl1 = new OOD2.BaseControl();
-            this.btnHelp = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.baseAndControl)).BeginInit();
@@ -87,12 +87,13 @@
             // 
             // btnRun
             // 
+            this.btnRun.BackColor = System.Drawing.SystemColors.Control;
             this.btnRun.Location = new System.Drawing.Point(25, 573);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(101, 48);
             this.btnRun.TabIndex = 10;
-            this.btnRun.Text = "Run";
-            this.btnRun.UseVisualStyleBackColor = true;
+            this.btnRun.Text = "Run (Obsolete)";
+            this.btnRun.UseVisualStyleBackColor = false;
             this.btnRun.Click += new System.EventHandler(this.run_Click);
             // 
             // groupBox1
@@ -109,6 +110,16 @@
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Controls";
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.Location = new System.Drawing.Point(25, 693);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(101, 23);
+            this.btnHelp.TabIndex = 12;
+            this.btnHelp.Text = "Help";
+            this.btnHelp.UseVisualStyleBackColor = true;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
             // baseAndControl
             // 
@@ -185,21 +196,11 @@
             this.testControl1.TabIndex = 1;
             this.testControl1.TabStop = false;
             // 
-            // btnHelp
-            // 
-            this.btnHelp.Location = new System.Drawing.Point(25, 693);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(101, 23);
-            this.btnHelp.TabIndex = 12;
-            this.btnHelp.Text = "Help";
-            this.btnHelp.UseVisualStyleBackColor = true;
-            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
-            // 
             // Designer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(610, 727);
+            this.ClientSize = new System.Drawing.Size(618, 739);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnRun);
@@ -207,6 +208,7 @@
             this.Controls.Add(this.btnRedraw);
             this.Controls.Add(this.canvas);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(626, 766);
             this.MinimumSize = new System.Drawing.Size(626, 766);
             this.Name = "Designer";
             this.Text = "Designer";
