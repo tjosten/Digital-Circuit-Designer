@@ -635,8 +635,233 @@ namespace OOD2
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            // TODO: open help window here
+            Help help = new Help();
+            help.Show();
         }
 
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            // we're gonna saving the current state here, yo
+            if (this.controls.Count == 0)
+            {
+                MessageBox.Show("You might want to create a design first.");
+                return;
+            }
+
+
+            DialogResult dr = saveFileDialog.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+
+                Dictionary<string, Dictionary<string, List<string>>> dict = new Dictionary<string, Dictionary<string, List<string>>>(this.controls.Count);
+
+                foreach (BaseControl control in this.controls)
+                {
+                    Dictionary<string, List<string>> data = new Dictionary<string, List<string>>();
+                    List<string> typeList = new List<string>(1);
+                    typeList.Add(control.GetType().ToString());
+                    data.Add("type", typeList);
+
+                    List<string> stateList = new List<string>(1);
+                    stateList.Add(control.currentState.ToString());
+                    data.Add("currentState", stateList);
+
+                    List<string> xList = new List<string>(1);
+                    xList.Add(control.tellPosition().X.ToString());
+                    data.Add("x", xList);
+
+                    List<string> yList = new List<string>(1);
+                    yList.Add(control.tellPosition().Y.ToString());
+                    data.Add("y", yList);
+
+                    List<string> inputs = new List<string>(control.inputs.Count);
+                    foreach (BaseControl input in control.inputs)
+                    {
+                        inputs.Add(input.getInstanceId().ToString());
+                    }
+                    data.Add("inputs", inputs);
+
+                    List<string> outputs = new List<string>(control.outputs.Count);
+                    foreach (BaseControl output in control.outputs)
+                    {
+                        outputs.Add(output.getInstanceId().ToString());
+                    }
+                    data.Add("outputs", outputs);
+
+                    dict.Add(control.getInstanceId().ToString(), data);
+                }
+
+                // now: xml
+                System.Runtime.Serialization.DataContractSerializer serializer = new System.Runtime.Serialization.DataContractSerializer(dict.GetType());
+
+                String outputString;
+
+                using (System.IO.StringWriter sw = new System.IO.StringWriter())
+                {
+                    using (System.Xml.XmlTextWriter writer = new System.Xml.XmlTextWriter(sw))
+                    {
+                        // add formatting so the XML is easy to read in the log
+                        writer.Formatting = System.Xml.Formatting.Indented;
+
+                        serializer.WriteObject(writer, dict);
+
+                        writer.Flush();
+
+                        outputString = sw.ToString();
+                    }
+                }
+
+                System.IO.StreamWriter file = null;
+
+                try
+                {
+                    file = new System.IO.StreamWriter(saveFileDialog.FileName);
+                    file.WriteLine(outputString);
+                    file.Close();
+                }
+                catch (System.IO.IOException)
+                {
+                    MessageBox.Show("An error occurred while writing the file, sorry!");
+                }
+                finally
+                {
+                    if (file != null)
+                        file.Close();
+                    MessageBox.Show("Save file successfully created!");
+                }
+            }
+        }
+
+        private void clearCanvas()
+        {
+            this.controls.Clear();
+            this.controls = new List<Control>();
+            this.activeControls.Clear();
+            this.activeControls = new List<Control>();
+            this.canvas.Controls.Clear();
+            this.canvas.Invalidate();
+        }
+
+        private BaseControl getControlByInstanceId(String instanceId)
+        {
+            foreach (BaseControl control in this.controls)
+            {
+                if (control.getInstanceId().ToString() == instanceId)
+                    return control;
+            }
+            return null;
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = openFileDialog.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                System.IO.StreamReader file = null;
+                String xmlString = "";
+
+                try
+                {
+                    file = new System.IO.StreamReader(openFileDialog.OpenFile());
+                    xmlString = file.ReadToEnd();
+                }
+                catch (System.IO.IOException)
+                {
+                    MessageBox.Show("An error occurred while reading the file, sorry!");
+                }
+                finally
+                {
+                    if (file != null)
+                        file.Close();
+                }
+
+                System.Runtime.Serialization.DataContractSerializer deserializer = null;
+
+                using (System.IO.Stream stream = new System.IO.MemoryStream())
+                {
+                    byte[] data = System.Text.Encoding.UTF8.GetBytes(xmlString);
+                    stream.Write(data, 0, data.Length);
+                    stream.Position = 0;
+
+                    Dictionary<string, Dictionary<string, List<string>>> dict = new Dictionary<string, Dictionary<string, List<string>>>(this.controls.Count);
+                    deserializer = new System.Runtime.Serialization.DataContractSerializer(dict.GetType());
+
+                    // clear the workspace
+                    this.clearCanvas();
+
+                    // in the first round, create all the controls
+                    foreach (KeyValuePair<string, Dictionary<string, List<string>>> control in (Dictionary<string, Dictionary<string, List<string>>>)deserializer.ReadObject(stream))
+                    {
+                        Dictionary<string, List<string>> controlData = control.Value;
+
+                        BaseControl controlObj = new BaseControl();
+
+                        switch (controlData["type"].First())
+                        {
+                            case "OOD2.AndControl":
+                                controlObj = new AndControl();
+                                break;
+                            case "OOD2.OrControl":
+                                controlObj = new OrControl();
+                                break;
+                            case "OOD2.XorControl":
+                                controlObj = new XorControl();
+                                break;
+                            case "OOD2.NotControl":
+                                controlObj = new NotControl();
+                                break;
+                            case "OOD2.BaseSink":
+                                controlObj = new BaseSink();
+                                break;
+                            case "OOD2.BaseSource":
+                                controlObj = new BaseSource();
+                                break;
+                        }
+
+                        controlObj.Location = new Point(Convert.ToInt32(controlData["x"].First()), Convert.ToInt32(controlData["y"].First()));
+                        controlObj.currentState = Convert.ToInt32(controlData["currentState"].First());
+                        controlObj.setInstanceId(control.Key);
+
+                        // draw it on the canvas
+                        controlObj.draw(controlObj.Location, this.canvas);
+                        controlObj.MouseClick -= new MouseEventHandler(controlClickHandler);
+                        controlObj.MouseDown -= new MouseEventHandler(connectControlsStart);
+                        controlObj.MouseUp -= new MouseEventHandler(connectControlsEnd);
+                        controlObj.MouseClick += new MouseEventHandler(controlClickHandler);
+                        controlObj.MouseDown += new MouseEventHandler(connectControlsStart);
+                        controlObj.MouseUp += new MouseEventHandler(connectControlsEnd);
+
+                        this.controls.Add(controlObj);
+                    }
+
+                    // reset stream
+                    stream.Position = 0;
+
+                    // in the second round, create all the connections
+                    foreach (KeyValuePair<string, Dictionary<string, List<string>>> control in (Dictionary<string, Dictionary<string, List<string>>>)deserializer.ReadObject(stream))
+                    {
+                        Dictionary<string, List<string>> controlData = control.Value;
+
+                        BaseControl controlObj = this.getControlByInstanceId(control.Key);
+
+                        foreach (String output in controlData["outputs"])
+                        {
+                            BaseControl outputObj = this.getControlByInstanceId(output);
+                            controlObj.outputs.Add(outputObj);
+                        }
+
+                        foreach (String input in controlData["inputs"])
+                        {
+                            BaseControl inputObj = this.getControlByInstanceId(input);
+                            controlObj.inputs.Add(inputObj);
+                        }
+                    }
+
+                    this.canvas.Invalidate();
+                    this.run();
+                }
+            }
+
+        }
     }
 }

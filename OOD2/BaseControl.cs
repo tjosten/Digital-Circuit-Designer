@@ -15,6 +15,8 @@ namespace OOD2
 
         public int currentState = -1;
 
+        protected Guid instanceId = Guid.NewGuid();
+
         protected OOD2.Library.Interfaces.Gate gate;
 
         public BaseControl()
@@ -29,6 +31,16 @@ namespace OOD2
             this.Image = image;
             this.Height = image.Height;
             this.Width = image.Width;
+        }
+
+        public void setInstanceId(String instanceId)
+        {
+            this.instanceId = new Guid(instanceId);
+        }
+
+        public Guid getInstanceId()
+        {
+            return this.instanceId;
         }
 
         public void draw(Point point, PictureBox pictureBox)
