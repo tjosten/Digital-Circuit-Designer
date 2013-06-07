@@ -32,15 +32,14 @@
             this.canvas = new System.Windows.Forms.PictureBox();
             this.btnRedraw = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
-            this.btnRun = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnHelp = new System.Windows.Forms.Button();
             this.baseAndControl = new OOD2.AndControl();
             this.baseOrControl = new OOD2.OrControl();
             this.baseSink = new OOD2.BaseSink();
             this.baseXorControl = new OOD2.XorControl();
             this.baseSource = new OOD2.BaseSource();
             this.baseNotControl = new OOD2.NotControl();
+            this.btnHelp = new System.Windows.Forms.Button();
             this.testControl1 = new OOD2.BaseControl();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -85,17 +84,6 @@
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
-            // btnRun
-            // 
-            this.btnRun.BackColor = System.Drawing.SystemColors.Control;
-            this.btnRun.Location = new System.Drawing.Point(25, 573);
-            this.btnRun.Name = "btnRun";
-            this.btnRun.Size = new System.Drawing.Size(101, 48);
-            this.btnRun.TabIndex = 10;
-            this.btnRun.Text = "Run (Obsolete)";
-            this.btnRun.UseVisualStyleBackColor = false;
-            this.btnRun.Click += new System.EventHandler(this.run_Click);
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.baseAndControl);
@@ -110,16 +98,6 @@
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Controls";
-            // 
-            // btnHelp
-            // 
-            this.btnHelp.Location = new System.Drawing.Point(25, 693);
-            this.btnHelp.Name = "btnHelp";
-            this.btnHelp.Size = new System.Drawing.Size(101, 23);
-            this.btnHelp.TabIndex = 12;
-            this.btnHelp.Text = "Help";
-            this.btnHelp.UseVisualStyleBackColor = true;
-            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
             // baseAndControl
             // 
@@ -187,6 +165,16 @@
             this.baseNotControl.TabStop = false;
             this.baseNotControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.control_MouseDown);
             // 
+            // btnHelp
+            // 
+            this.btnHelp.Location = new System.Drawing.Point(25, 693);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(101, 23);
+            this.btnHelp.TabIndex = 12;
+            this.btnHelp.Text = "Help";
+            this.btnHelp.UseVisualStyleBackColor = true;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+            // 
             // testControl1
             // 
             this.testControl1.AllowDrop = true;
@@ -200,10 +188,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(618, 739);
+            this.ClientSize = new System.Drawing.Size(610, 727);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.btnRun);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnRedraw);
             this.Controls.Add(this.canvas);
@@ -238,7 +225,6 @@
         private NotControl baseNotControl;
         private BaseSource baseSource;
         private BaseSink baseSink;
-        private System.Windows.Forms.Button btnRun;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnHelp;
 

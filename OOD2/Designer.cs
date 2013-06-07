@@ -104,13 +104,6 @@ namespace OOD2
             int x = e.X;
             int y = e.Y;
 
-            // update x, y so it aligns to the grid
-            x = ((int)(x / 10)) * 10;
-            y = ((int)(y / 10)) * 10;
-
-            Point dropPoint = this.canvas.PointToClient(new Point(x, y));
-
-            System.Console.WriteLine("Drop Position: " + dropPoint.X + ":" + dropPoint.Y);
             System.Console.WriteLine("Drop type: " + this.dragSourceType);
 
             // add the thing to the canvas
@@ -136,6 +129,15 @@ namespace OOD2
                     control = new BaseSink();
                     break;
             }
+
+            // update x, y so we have the center of our control where the mouse is
+            x -= control.Width / 2;
+            y -= control.Height / 2;
+
+            Point dropPoint = this.canvas.PointToClient(new Point(x, y));
+
+            System.Console.WriteLine("Drop Position: " + dropPoint.X + ":" + dropPoint.Y);
+
             // draw it on the canvas
             control.draw(dropPoint, this.canvas);
             control.MouseClick += new MouseEventHandler(controlClickHandler);
@@ -149,7 +151,7 @@ namespace OOD2
             this.canvas.Invalidate();
 
             // trigger run
-            btnRun.PerformClick();
+            this.run();
         }
 
         private void Canvas_OnDragLeave(object sender, System.Windows.Forms.DragEventArgs e)
@@ -177,7 +179,7 @@ namespace OOD2
                     this.canvas.Invalidate();
                 }
                 // trigger run
-                btnRun.PerformClick();
+                this.run();
                 return;
             }
 
@@ -271,7 +273,7 @@ namespace OOD2
             this.canvas.Invalidate();
 
             // trigger run
-            btnRun.PerformClick();
+            this.run();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -289,7 +291,7 @@ namespace OOD2
             }
 
             // trigger run
-            btnRun.PerformClick();
+            this.run();
         }
 
         private void removeControl(BaseControl control)
@@ -478,10 +480,10 @@ namespace OOD2
             this.controlEnd = null;
 
             // trigger run
-            btnRun.PerformClick();
+            this.run();
         }
 
-        private void run_Click(object sender, EventArgs e)
+        private void run()
         {
             if (this.isIterating)
             {
@@ -492,7 +494,6 @@ namespace OOD2
             cutPower();
 
             // disable some buttons
-            btnRun.Enabled = false;
             btnRedraw.Enabled = false;
             
             // unselect all controls
@@ -516,7 +517,6 @@ namespace OOD2
                 }
             }
 
-            btnRun.Enabled = true;
             btnRedraw.Enabled = true;
 
             this.isIterating = false;
