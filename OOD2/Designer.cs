@@ -472,10 +472,14 @@ namespace OOD2
                 return;
             }
 
+            // draw the connection on the cancas
             drawConnectControls(this.controlStart, this.controlEnd, this.canvas.CreateGraphics());
+            
+            // add the connections to input and output of the controls
             this.controlStart.outputs.Add(this.controlEnd);
             this.controlEnd.inputs.Add(this.controlStart);
 
+            // reset the internal pointer
             this.controlStart = null;
             this.controlEnd = null;
 
@@ -485,12 +489,17 @@ namespace OOD2
 
         private void run()
         {
+
+            // are we already iterating? if so, fuck off
             if (this.isIterating)
             {
                 return;
             }
+
             this.isIterating = true;
             this.foundUnknown = true;
+            
+            // turn off all the lamps!
             cutPower();
 
             // disable some buttons
@@ -500,13 +509,17 @@ namespace OOD2
             this.activeControls.Clear();
             this.canvas.Invalidate();
 
+            // while we're having still controls with unknown states, we keep runnin'!
             while (this.foundUnknown)
             {
                 this.foundUnknown = false;
+                // we iterate each control we got
                 foreach (BaseControl control in this.controls)
                 {
+                    // and IF the control is a source...
                     if (control.GetType().ToString() == "OOD2.BaseSource")
                     {
+                        // .. we start calculating the path recursively!
                         BaseSource quelle = (BaseSource)control;
                         if (/*quelle.getStatus()*/true) // we always have to do that, because of the NotControl!
                         {
@@ -517,13 +530,14 @@ namespace OOD2
                 }
             }
 
+            // we're done! nothing to see here, move along!
             btnRedraw.Enabled = true;
-
             this.isIterating = false;
         }
 
         private void cutPower()
         {
+            // turn off all the sinks and reset all controls states
             foreach (BaseControl control in this.controls)
             {
                 if (control.GetType().ToString() == "OOD2.BaseSink")
@@ -540,10 +554,13 @@ namespace OOD2
 
         private void recursiveIterator(BaseControl control, BaseControl lastControl = null)
         {
+            // okay, now the business begins. this this is called recursively!
+
+            // foreach output-control of the given control..
             foreach (BaseControl subcontrol in control.outputs)
             {
+                // .. we check if it's a sink. if so: shall we turn it on or off?
                 if (subcontrol.GetType().ToString() == "OOD2.BaseSink") {
-                    // HEUREKA
                     BaseSink senke = (BaseSink)subcontrol;
 
                     // invalidate canvas
@@ -551,10 +568,13 @@ namespace OOD2
 
                     foreach (BaseControl input in senke.inputs)
                     {
+                        // still unkown, move along!
                         if (input.currentState == -1)
                             this.foundUnknown = true;
+                        // oh, sadly no power for me :(
                         else if (input.currentState == 0)
                             senke.off();
+                        // yeah, come at me bro! turn me on! 
                         else if (input.currentState == 1)
                         {
                             senke.on();
@@ -562,17 +582,20 @@ namespace OOD2
                         }
                     }
                 } else {
-
+                    // okay, we only want controls with 2 inputs connected..
                     if (subcontrol.inputs.Count != 2)
+                        // ..BUT only if that's not a NotControl!
                         if (subcontrol.GetType().ToString() != "OOD2.NotControl")
                             continue;
                         else {
                             // special exception for NotControl as it can has only 1 input
                             NotControl not = (NotControl)subcontrol;
                             
+                            // has that NotControl an input?
                             if (not.getSingleInput() == null)
                                 continue;
 
+                            // set the state
                             if (not.getSingleInput().currentState > -1)
                             {
                                 if (not.checkStatus())
@@ -584,10 +607,13 @@ namespace OOD2
                             {
                                 this.foundUnknown = true;
                             }
+
+                            // .. aaand carry on!
                             recursiveIterator(subcontrol, control);
                             continue;
                         }
 
+                    // okay, these are AndControls, OrControls or XorControls. Or NotControls with 2 inputs.
                     if (subcontrol.inputs[0].currentState > -1 &&
                         subcontrol.inputs[1].currentState > -1)
                     {
@@ -628,6 +654,7 @@ namespace OOD2
                         this.foundUnknown = true;
                     }
 
+                    // whoop, next!
                     recursiveIterator(subcontrol, control);
                 }
             }
@@ -635,6 +662,7 @@ namespace OOD2
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
+            // you want some help?
             Help help = new Help();
             help.Show();
         }
@@ -648,16 +676,23 @@ namespace OOD2
                 return;
             }
 
-
+            // we are so kind to let the user select where to save his file. aren't we kind?
             DialogResult dr = saveFileDialog.ShowDialog();
             if (dr == DialogResult.OK)
             {
 
-                Dictionary<string, Dictionary<string, List<string>>> dict = new Dictionary<string, Dictionary<string, List<string>>>(this.controls.Count);
+                // okay, so i herd you like dictionaries, so i put sum dictionaries in your dictionary!
+                Dictionary<string, Dictionary<string, List<string>>> dict = 
+                    new Dictionary<string, Dictionary<string, List<string>>>(this.controls.Count);
 
+                // okay, let's iterate all controls we got (again. i feel like i do this all day long)
                 foreach (BaseControl control in this.controls)
                 {
+                    // the data: we have a key (string) and sum values (List<string>)
+                    // thats not optimal, but it works(tm)
                     Dictionary<string, List<string>> data = new Dictionary<string, List<string>>();
+
+                    // fill in ALL THE DATA!
                     List<string> typeList = new List<string>(1);
                     typeList.Add(control.GetType().ToString());
                     data.Add("type", typeList);
@@ -688,10 +723,12 @@ namespace OOD2
                     }
                     data.Add("outputs", outputs);
 
+                    // and finally add it to the dict with the controls instanceId as a key, so we can identify it later on when
+                    // reconnecting the controls on loading.
                     dict.Add(control.getInstanceId().ToString(), data);
                 }
 
-                // now: xml
+                // now: xml magic. we serialize the dictionary in a dictionary with DataContractSerializer. serious business.
                 System.Runtime.Serialization.DataContractSerializer serializer = new System.Runtime.Serialization.DataContractSerializer(dict.GetType());
 
                 String outputString;
@@ -703,16 +740,20 @@ namespace OOD2
                         // add formatting so the XML is easy to read in the log
                         writer.Formatting = System.Xml.Formatting.Indented;
 
+                        // write the stuff into the XmlObject
                         serializer.WriteObject(writer, dict);
 
+                        // flush the.. xmlObject
                         writer.Flush();
 
+                        // finally: we have sum XML string!
                         outputString = sw.ToString();
                     }
                 }
 
                 System.IO.StreamWriter file = null;
 
+                // now we gonna "try" to write that string into the given file.
                 try
                 {
                     file = new System.IO.StreamWriter(saveFileDialog.FileName);
@@ -734,6 +775,7 @@ namespace OOD2
 
         private void clearCanvas()
         {
+            // okay, wipe everything!
             this.controls.Clear();
             this.controls = new List<Control>();
             this.activeControls.Clear();
@@ -744,6 +786,7 @@ namespace OOD2
 
         private BaseControl getControlByInstanceId(String instanceId)
         {
+            // find the control which has the correct instanceID
             foreach (BaseControl control in this.controls)
             {
                 if (control.getInstanceId().ToString() == instanceId)
@@ -754,12 +797,14 @@ namespace OOD2
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
+            // okay, now we wanna load sum file
             DialogResult dr = openFileDialog.ShowDialog();
             if (dr == DialogResult.OK)
             {
                 System.IO.StreamReader file = null;
                 String xmlString = "";
 
+                // we try to read the file given by the user
                 try
                 {
                     file = new System.IO.StreamReader(openFileDialog.OpenFile());
@@ -775,6 +820,7 @@ namespace OOD2
                         file.Close();
                 }
 
+                // we again have our DataContractSerializer which this time DEserializes our XML data to... a dictrionary within a dictionary!
                 System.Runtime.Serialization.DataContractSerializer deserializer = null;
 
                 using (System.IO.Stream stream = new System.IO.MemoryStream())
@@ -783,17 +829,17 @@ namespace OOD2
                     stream.Write(data, 0, data.Length);
                     stream.Position = 0;
 
+                    // that's what we had before.
                     Dictionary<string, Dictionary<string, List<string>>> dict = new Dictionary<string, Dictionary<string, List<string>>>(this.controls.Count);
                     deserializer = new System.Runtime.Serialization.DataContractSerializer(dict.GetType());
 
                     // clear the workspace
                     this.clearCanvas();
 
-                    // in the first round, create all the controls
-
+                    // in the first round, create all the controls and draw them on the canvas
                     try
                     {
-
+                        // this is how to iterate a dictrionary object with KeyValuePair
                         foreach (KeyValuePair<string, Dictionary<string, List<string>>> control in (Dictionary<string, Dictionary<string, List<string>>>)deserializer.ReadObject(stream))
                         {
                             Dictionary<string, List<string>> controlData = control.Value;
@@ -828,6 +874,7 @@ namespace OOD2
 
                             // draw it on the canvas
                             controlObj.draw(controlObj.Location, this.canvas);
+                            // add sum events to it
                             controlObj.MouseClick -= new MouseEventHandler(controlClickHandler);
                             controlObj.MouseDown -= new MouseEventHandler(connectControlsStart);
                             controlObj.MouseUp -= new MouseEventHandler(connectControlsEnd);
@@ -835,13 +882,14 @@ namespace OOD2
                             controlObj.MouseDown += new MouseEventHandler(connectControlsStart);
                             controlObj.MouseUp += new MouseEventHandler(connectControlsEnd);
 
+                            // and add it to our controls ist
                             this.controls.Add(controlObj);
                         }
 
                         // reset stream
                         stream.Position = 0;
 
-                        // in the second round, create all the connections
+                        // in the second round, create and draw all the connections
                         foreach (KeyValuePair<string, Dictionary<string, List<string>>> control in (Dictionary<string, Dictionary<string, List<string>>>)deserializer.ReadObject(stream))
                         {
                             Dictionary<string, List<string>> controlData = control.Value;
@@ -881,6 +929,7 @@ namespace OOD2
         {
             if (MessageBox.Show("Are you sure you want to clear the canvas without saving?", null, MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
+                // ok :(
                 this.clearCanvas();
             }
         }
