@@ -45,6 +45,7 @@
             this.baseSource = new OOD2.BaseSource();
             this.baseNotControl = new OOD2.NotControl();
             this.testControl1 = new OOD2.BaseControl();
+            this.btnClear = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.baseAndControl)).BeginInit();
@@ -69,7 +70,7 @@
             // 
             // btnRedraw
             // 
-            this.btnRedraw.Location = new System.Drawing.Point(25, 656);
+            this.btnRedraw.Location = new System.Drawing.Point(25, 639);
             this.btnRedraw.Name = "btnRedraw";
             this.btnRedraw.Size = new System.Drawing.Size(101, 23);
             this.btnRedraw.TabIndex = 2;
@@ -80,7 +81,7 @@
             // btnDelete
             // 
             this.btnDelete.Enabled = false;
-            this.btnDelete.Location = new System.Drawing.Point(25, 627);
+            this.btnDelete.Location = new System.Drawing.Point(25, 610);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(101, 23);
             this.btnDelete.TabIndex = 3;
@@ -115,7 +116,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(25, 588);
+            this.btnSave.Location = new System.Drawing.Point(25, 571);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(101, 23);
             this.btnSave.TabIndex = 13;
@@ -134,7 +135,7 @@
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(25, 559);
+            this.btnLoad.Location = new System.Drawing.Point(25, 542);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(101, 23);
             this.btnLoad.TabIndex = 14;
@@ -217,11 +218,22 @@
             this.testControl1.TabIndex = 1;
             this.testControl1.TabStop = false;
             // 
+            // btnClear
+            // 
+            this.btnClear.Location = new System.Drawing.Point(25, 664);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(101, 23);
+            this.btnClear.TabIndex = 15;
+            this.btnClear.Text = "Clear canvas";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
             // Designer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(610, 727);
+            this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnHelp);
@@ -266,6 +278,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.Button btnLoad;
+        private System.Windows.Forms.Button btnClear;
 
 
 

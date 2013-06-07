@@ -790,78 +790,99 @@ namespace OOD2
                     this.clearCanvas();
 
                     // in the first round, create all the controls
-                    foreach (KeyValuePair<string, Dictionary<string, List<string>>> control in (Dictionary<string, Dictionary<string, List<string>>>)deserializer.ReadObject(stream))
+
+                    try
                     {
-                        Dictionary<string, List<string>> controlData = control.Value;
 
-                        BaseControl controlObj = new BaseControl();
-
-                        switch (controlData["type"].First())
+                        foreach (KeyValuePair<string, Dictionary<string, List<string>>> control in (Dictionary<string, Dictionary<string, List<string>>>)deserializer.ReadObject(stream))
                         {
-                            case "OOD2.AndControl":
-                                controlObj = new AndControl();
-                                break;
-                            case "OOD2.OrControl":
-                                controlObj = new OrControl();
-                                break;
-                            case "OOD2.XorControl":
-                                controlObj = new XorControl();
-                                break;
-                            case "OOD2.NotControl":
-                                controlObj = new NotControl();
-                                break;
-                            case "OOD2.BaseSink":
-                                controlObj = new BaseSink();
-                                break;
-                            case "OOD2.BaseSource":
-                                controlObj = new BaseSource();
-                                break;
+                            Dictionary<string, List<string>> controlData = control.Value;
+
+                            BaseControl controlObj = new BaseControl();
+
+                            switch (controlData["type"].First())
+                            {
+                                case "OOD2.AndControl":
+                                    controlObj = new AndControl();
+                                    break;
+                                case "OOD2.OrControl":
+                                    controlObj = new OrControl();
+                                    break;
+                                case "OOD2.XorControl":
+                                    controlObj = new XorControl();
+                                    break;
+                                case "OOD2.NotControl":
+                                    controlObj = new NotControl();
+                                    break;
+                                case "OOD2.BaseSink":
+                                    controlObj = new BaseSink();
+                                    break;
+                                case "OOD2.BaseSource":
+                                    controlObj = new BaseSource();
+                                    break;
+                            }
+
+                            controlObj.Location = new Point(Convert.ToInt32(controlData["x"].First()), Convert.ToInt32(controlData["y"].First()));
+                            controlObj.currentState = Convert.ToInt32(controlData["currentState"].First());
+                            controlObj.setInstanceId(control.Key);
+
+                            // draw it on the canvas
+                            controlObj.draw(controlObj.Location, this.canvas);
+                            controlObj.MouseClick -= new MouseEventHandler(controlClickHandler);
+                            controlObj.MouseDown -= new MouseEventHandler(connectControlsStart);
+                            controlObj.MouseUp -= new MouseEventHandler(connectControlsEnd);
+                            controlObj.MouseClick += new MouseEventHandler(controlClickHandler);
+                            controlObj.MouseDown += new MouseEventHandler(connectControlsStart);
+                            controlObj.MouseUp += new MouseEventHandler(connectControlsEnd);
+
+                            this.controls.Add(controlObj);
                         }
 
-                        controlObj.Location = new Point(Convert.ToInt32(controlData["x"].First()), Convert.ToInt32(controlData["y"].First()));
-                        controlObj.currentState = Convert.ToInt32(controlData["currentState"].First());
-                        controlObj.setInstanceId(control.Key);
+                        // reset stream
+                        stream.Position = 0;
 
-                        // draw it on the canvas
-                        controlObj.draw(controlObj.Location, this.canvas);
-                        controlObj.MouseClick -= new MouseEventHandler(controlClickHandler);
-                        controlObj.MouseDown -= new MouseEventHandler(connectControlsStart);
-                        controlObj.MouseUp -= new MouseEventHandler(connectControlsEnd);
-                        controlObj.MouseClick += new MouseEventHandler(controlClickHandler);
-                        controlObj.MouseDown += new MouseEventHandler(connectControlsStart);
-                        controlObj.MouseUp += new MouseEventHandler(connectControlsEnd);
+                        // in the second round, create all the connections
+                        foreach (KeyValuePair<string, Dictionary<string, List<string>>> control in (Dictionary<string, Dictionary<string, List<string>>>)deserializer.ReadObject(stream))
+                        {
+                            Dictionary<string, List<string>> controlData = control.Value;
 
-                        this.controls.Add(controlObj);
-                    }
+                            BaseControl controlObj = this.getControlByInstanceId(control.Key);
 
-                    // reset stream
-                    stream.Position = 0;
+                            foreach (String output in controlData["outputs"])
+                            {
+                                BaseControl outputObj = this.getControlByInstanceId(output);
+                                controlObj.outputs.Add(outputObj);
+                            }
 
-                    // in the second round, create all the connections
-                    foreach (KeyValuePair<string, Dictionary<string, List<string>>> control in (Dictionary<string, Dictionary<string, List<string>>>)deserializer.ReadObject(stream))
+                            foreach (String input in controlData["inputs"])
+                            {
+                                BaseControl inputObj = this.getControlByInstanceId(input);
+                                controlObj.inputs.Add(inputObj);
+                            }
+                        }
+
+                    } 
+                    catch (Exception) 
                     {
-                        Dictionary<string, List<string>> controlData = control.Value;
-
-                        BaseControl controlObj = this.getControlByInstanceId(control.Key);
-
-                        foreach (String output in controlData["outputs"])
-                        {
-                            BaseControl outputObj = this.getControlByInstanceId(output);
-                            controlObj.outputs.Add(outputObj);
-                        }
-
-                        foreach (String input in controlData["inputs"])
-                        {
-                            BaseControl inputObj = this.getControlByInstanceId(input);
-                            controlObj.inputs.Add(inputObj);
-                        }
+                        MessageBox.Show("An error occurred while loading the file. Make sure its an .designersav file!");
                     }
-
-                    this.canvas.Invalidate();
-                    this.run();
+                    finally 
+                    {
+                        this.canvas.Invalidate();
+                        this.run();
+                    }
+                        
                 }
             }
 
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to clear the canvas without saving?", null, MessageBoxButtons.OKCancel) == DialogResult.OK)
+            {
+                this.clearCanvas();
+            }
         }
     }
 }
