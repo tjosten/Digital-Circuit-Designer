@@ -25,6 +25,13 @@ namespace OOD2
             return this.status;
         }
 
+        public void off()
+        {
+            this.status = false;
+            this.Image = Properties.Resources.source_off;
+            this.currentState = 0;
+        }
+
         public void toggle()
         {
             if (this.status)

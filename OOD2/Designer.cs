@@ -509,9 +509,19 @@ namespace OOD2
             this.activeControls.Clear();
             this.canvas.Invalidate();
 
+            int iterations = 0;
+
             // while we're having still controls with unknown states, we keep runnin'!
             while (this.foundUnknown)
             {
+
+                if (++iterations > this.controls.Count * this.controls.Count * 2)
+                {
+                    // we want to kind of escape from endless loops caused by magic circumstances
+                    Console.WriteLine("Endless loop protection!");
+                    break;
+                }
+
                 this.foundUnknown = false;
                 // we iterate each control we got
                 foreach (BaseControl control in this.controls)
@@ -566,20 +576,30 @@ namespace OOD2
                     // invalidate canvas
                     canvas.Invalidate();
 
-                    foreach (BaseControl input in senke.inputs)
+                    try
                     {
-                        // still unkown, move along!
-                        if (input.currentState == -1)
-                            this.foundUnknown = true;
-                        // oh, sadly no power for me :(
-                        else if (input.currentState == 0)
-                            senke.off();
-                        // yeah, come at me bro! turn me on! 
-                        else if (input.currentState == 1)
+
+                        foreach (BaseControl input in senke.inputs)
                         {
-                            senke.on();
-                            break;
+                            // still unkown, move along!
+                            if (input.currentState == -1)
+                                this.foundUnknown = true;
+                            // oh, sadly no power for me :(
+                            else if (input.currentState == 0)
+                                senke.off();
+                            // yeah, come at me bro! turn me on! 
+                            else if (input.currentState == 1)
+                            {
+                                senke.on();
+                                break;
+                            }
                         }
+                    }
+                    catch (StackOverflowException)
+                    {
+                        // whoops. why did this happen?
+                        // let's just ignore that for this time..
+                        return;
                     }
                 } else {
                     // okay, we only want controls with 2 inputs connected..
@@ -865,6 +885,13 @@ namespace OOD2
                                     break;
                                 case "OOD2.BaseSource":
                                     controlObj = new BaseSource();
+
+                                    // set the correct state to it
+                                    if (Convert.ToInt32(controlData["currentState"].First()) == 0)
+                                    {
+                                        ((BaseSource)controlObj).off();
+                                    }
+
                                     break;
                             }
 
